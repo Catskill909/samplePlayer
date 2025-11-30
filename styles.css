@@ -30,7 +30,18 @@ body {
     margin: 20px 0;
     position: relative;
     border-radius: 4px;
+    overflow: visible;
+    /* Changed from hidden to allow trigger labels to show */
+}
+
+.waveform-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    border-radius: 4px;
 }
 
 .progress-overlay {
@@ -47,6 +58,7 @@ body {
 
 .playhead {
     position: absolute;
+    top: 0;
     width: 2px;
     background: #64b5f6;
     height: 100%;
@@ -98,13 +110,33 @@ body {
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
     border-top: 10px solid #ff4040;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
 }
 
 .trigger-marker:hover::after,
 .trigger-marker.dragging::after {
     border-top-color: #ff8080;
     transform: scale(1.2);
+}
+
+.trigger-label {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: #ff4040;
+    border-radius: 50%;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    /* Let clicks pass through to the line/handle */
 }
 
 .pads-container {
@@ -201,7 +233,8 @@ input[type="file"] {
     background: #1e1e1e;
     width: 90%;
     max-width: 600px;
-    max-height: 80vh;  /* Add this line */
+    max-height: 80vh;
+    /* Add this line */
     border-radius: 8px;
     overflow: hidden;
     display: flex;
@@ -216,7 +249,8 @@ input[type="file"] {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #3700b3;
-    flex-shrink: 0;  /* Add this line */
+    flex-shrink: 0;
+    /* Add this line */
 }
 
 
@@ -251,7 +285,8 @@ input[type="file"] {
     background: #2d2d2d;
     padding: 0 10px;
     border-bottom: 1px solid #a4a4a4;
-    flex-shrink: 0;  /* Add this line */
+    flex-shrink: 0;
+    /* Add this line */
 }
 
 .tab-button {
@@ -273,7 +308,8 @@ input[type="file"] {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
-    max-height: calc(80vh - 140px);  /* Add this line */
+    max-height: calc(80vh - 140px);
+    /* Add this line */
 }
 
 .sample-item {
@@ -345,10 +381,12 @@ input[type="file"] {
         background: #ff4040;
         transform: scale(1);
     }
+
     50% {
         background: #ff4040;
         transform: scale(0.95);
     }
+
     100% {
         background: #3700b3;
         transform: scale(1);
@@ -358,6 +396,7 @@ input[type="file"] {
 .trigger-pad.cleared {
     animation: clearFlash 0.3s ease-out;
 }
+
 .sample-title {
     text-align: center;
     margin: 15px 0;

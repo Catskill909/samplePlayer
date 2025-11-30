@@ -1,225 +1,232 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>OSS Sample Trigger Player</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ultra&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <!-- Add Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-    <style>
-      .help-trigger {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        z-index: 100;
-      }
 
-      .help-trigger i {
-        font-size: 24px;
-        color: black;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>OSS Sample Trigger Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Add Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    .help-trigger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+    }
 
-      .help-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        display: none;
-        z-index: 1000;
-      }
+    .help-trigger i {
+      font-size: 24px;
+      color: black;
+    }
 
-      .help-overlay.active {
-        display: block;
-      }
+    .help-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      z-index: 1000;
+    }
 
-      .close-help {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        z-index: 1001;
-      }
+    .help-overlay.active {
+      display: block;
+    }
 
-      .close-help i {
-        font-size: 24px;
-        color: black;
-      }
+    .close-help {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      z-index: 1001;
+    }
 
-      #helpFrame {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app-title">
-      <h1>OSS Sample Player</h1>
-    </div>
-    <!-- Help Button -->
-    <button class="help-trigger" id="helpTrigger" aria-label="Show Help">
-      <i class="fas fa-question"></i>
+    .close-help i {
+      font-size: 24px;
+      color: black;
+    }
+
+    #helpFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-title">
+    <h1>OSS Sample Player</h1>
+  </div>
+  <!-- Help Button -->
+  <button class="help-trigger" id="helpTrigger" aria-label="Show Help">
+    <i class="fas fa-question"></i>
+  </button>
+
+  <!-- Help Overlay -->
+  <div class="help-overlay" id="helpOverlay">
+    <button class="close-help" id="closeHelp" aria-label="Close Help">
+      <i class="fas fa-times"></i>
     </button>
+    <iframe id="helpFrame" src="help.html"></iframe>
+  </div>
 
-    <!-- Help Overlay -->
-    <div class="help-overlay" id="helpOverlay">
-      <button class="close-help" id="closeHelp" aria-label="Close Help">
-        <i class="fas fa-times"></i>
+  <div class="container">
+    <div class="controls">
+      <label class="file-input-label" for="audioInput">Load Sample</label>
+      <input type="file" id="audioInput" accept="audio/*" />
+      <button id="playButton" disabled>Play</button>
+      <button id="markButton" disabled>Mark (Space)</button>
+      <button id="clearButton">Clear</button>
+
+      <!-- New Sample Browser Button -->
+      <button id="browseSamples" class="browse-button">
+        <i class="fas fa-music"></i> Browse Samples
       </button>
-      <iframe id="helpFrame" src="help.html"></iframe>
     </div>
-
-    <div class="container">
-      <div class="controls">
-        <label class="file-input-label" for="audioInput">Load Sample</label>
-        <input type="file" id="audioInput" accept="audio/*" />
-        <button id="playButton" disabled>Play</button>
-        <button id="markButton" disabled>Mark (Space)</button>
-        <button id="clearButton">Clear</button>
-
-        <!-- New Sample Browser Button -->
-        <button id="browseSamples" class="browse-button">
-          <i class="fas fa-music"></i> Browse Samples
-        </button>
-      </div>
-      <div class="waveform" id="waveform">
+    <div class="waveform" id="waveform">
+      <div class="waveform-inner">
         <div class="progress-overlay" id="progressOverlay"></div>
         <canvas id="spectrogram"></canvas>
-        <div class="trigger-markers" id="triggerMarkers"></div>
         <div class="playhead" id="playhead"></div>
       </div>
-      <div class="sample-title" id="sampleTitle"></div>
-      <div class="pads-container" id="padsContainer">
-        <div class="trigger-pad" data-index="0">
-          <span>1</span>
-          <span class="time-marker"></span>
-        </div>
-        <div class="trigger-pad" data-index="1">
-          <span>2</span>
-          <span class="time-marker"></span>
-        </div>
-        <div class="trigger-pad" data-index="2">
-          <span>3</span>
-          <span class="time-marker"></span>
-        </div>
-        <div class="trigger-pad" data-index="3">
-          <span>4</span>
-          <span class="time-marker"></span>
-        </div>
+      <div class="trigger-markers" id="triggerMarkers"></div>
+    </div>
+    <div class="sample-title" id="sampleTitle"></div>
+    <div class="pads-container" id="padsContainer">
+      <div class="trigger-pad" data-index="0">
+        <span>1</span>
+        <span class="time-marker"></span>
+      </div>
+      <div class="trigger-pad" data-index="1">
+        <span>2</span>
+        <span class="time-marker"></span>
+      </div>
+      <div class="trigger-pad" data-index="2">
+        <span>3</span>
+        <span class="time-marker"></span>
+      </div>
+      <div class="trigger-pad" data-index="3">
+        <span>4</span>
+        <span class="time-marker"></span>
       </div>
     </div>
+  </div>
 
-    <div class="dub-pads-container">
-      <div class="dub-pad" data-effect="delay1">
-        <i class="dub-pad-icon">🌊</i>
-        <span class="dub-pad-label">Echo 1</span>
-      </div>
-      <div class="dub-pad" data-effect="delay2">
-        <i class="dub-pad-icon">🌀</i>
-        <span class="dub-pad-label">Echo 2</span>
-      </div>
-      <div class="dub-pad" data-effect="delay3">
-        <i class="dub-pad-icon">💫</i>
-        <span class="dub-pad-label">Echo 3</span>
-      </div>
-      <div class="dub-pad" data-effect="reverb">
-        <i class="dub-pad-icon">✨</i>
-        <span class="dub-pad-label">Space</span>
-      </div>
-      <div class="dub-pad" data-effect="tubbySwell">
-        <i class="dub-pad-icon">🎛️</i>
-        <span class="dub-pad-label">Tubby</span>
-      </div>
-      <div class="dub-pad" data-effect="dropOut">
-        <i class="dub-pad-icon">📼</i>
-        <span class="dub-pad-label">Drop</span>
-      </div>
-      <div class="dub-pad" data-effect="springs">
-        <i class="dub-pad-icon">🌀</i>
-        <span class="dub-pad-label">Spring</span>
-      </div>
-      <div class="dub-pad" data-effect="ghostEcho">
-        <i class="dub-pad-icon">👻</i>
-        <span class="dub-pad-label">Ghost</span>
-      </div>
+  <div class="dub-pads-container">
+    <div class="dub-pad" data-effect="delay1" data-key="q">
+      <span class="key-hint">Q</span>
+      <i class="dub-pad-icon">🌊</i>
+      <span class="dub-pad-label">Echo 1</span>
     </div>
-
-    <!-- Sample Browser Overlay -->
-    <div id="sampleBrowserOverlay" class="sample-browser-overlay">
-      <div class="sample-browser-content">
-        <div class="sample-browser-header">
-          <h2>Sample Library</h2>
-          <button id="closeSampleBrowser" class="close-button">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="sample-browser-tabs">
-          <button class="tab-button active" data-tab="oss">OSS Sounds</button>
-          <button class="tab-button" data-tab="reggae">Reggae Skits</button>
-          <button class="tab-button" data-tab="sirens">Sirens & Effects</button>
-        </div>
-        <div id="sampleList" class="sample-list"></div>
-      </div>
+    <div class="dub-pad" data-effect="delay2" data-key="w">
+      <span class="key-hint">W</span>
+      <i class="dub-pad-icon">🌀</i>
+      <span class="dub-pad-label">Echo 2</span>
     </div>
-    <link rel="stylesheet" href="dubEffects.css" />
-    <script src="dubEffects.js"></script>
-    <script src="script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const player = new SamplePlayer();
+    <div class="dub-pad" data-effect="delay3" data-key="e">
+      <span class="key-hint">E</span>
+      <i class="dub-pad-icon">💫</i>
+      <span class="dub-pad-label">Echo 3</span>
+    </div>
+    <div class="dub-pad" data-effect="reverb" data-key="r">
+      <span class="key-hint">R</span>
+      <i class="dub-pad-icon">✨</i>
+      <span class="dub-pad-label">Space</span>
+    </div>
+    <div class="dub-pad" data-effect="tubbySwell" data-key="a">
+      <span class="key-hint">A</span>
+      <i class="dub-pad-icon">🎛️</i>
+      <span class="dub-pad-label">Tubby</span>
+    </div>
+    <div class="dub-pad" data-effect="dropOut" data-key="s">
+      <span class="key-hint">S</span>
+      <i class="dub-pad-icon">📼</i>
+      <span class="dub-pad-label">Drop</span>
+    </div>
+    <div class="dub-pad" data-effect="springs" data-key="d">
+      <span class="key-hint">D</span>
+      <i class="dub-pad-icon">🌀</i>
+      <span class="dub-pad-label">Spring</span>
+    </div>
+    <div class="dub-pad" data-effect="ghostEcho" data-key="f">
+      <span class="key-hint">F</span>
+      <i class="dub-pad-icon">👻</i>
+      <span class="dub-pad-label">Ghost</span>
+    </div>
+  </div>
 
-        // Help system
-        const helpTrigger = document.getElementById("helpTrigger");
-        const helpOverlay = document.getElementById("helpOverlay");
-        const closeHelp = document.getElementById("closeHelp");
+  <!-- Sample Browser Overlay -->
+  <div id="sampleBrowserOverlay" class="sample-browser-overlay">
+    <div class="sample-browser-content">
+      <div class="sample-browser-header">
+        <h2>Sample Library</h2>
+        <button id="closeSampleBrowser" class="close-button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="sample-browser-tabs">
+        <button class="tab-button active" data-tab="oss">OSS Sounds</button>
+        <button class="tab-button" data-tab="reggae">Reggae Skits</button>
+        <button class="tab-button" data-tab="sirens">Sirens & Effects</button>
+      </div>
+      <div id="sampleList" class="sample-list"></div>
+    </div>
+  </div>
+  <link rel="stylesheet" href="dubEffects.css" />
+  <script src="dubEffects.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const player = new SamplePlayer();
 
-        helpTrigger.addEventListener("click", () => {
-          helpOverlay.classList.add("active");
-          document.body.style.overflow = "hidden";
-        });
+      // Help system
+      const helpTrigger = document.getElementById("helpTrigger");
+      const helpOverlay = document.getElementById("helpOverlay");
+      const closeHelp = document.getElementById("closeHelp");
 
-        closeHelp.addEventListener("click", () => {
+      helpTrigger.addEventListener("click", () => {
+        helpOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      });
+
+      closeHelp.addEventListener("click", () => {
+        helpOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && helpOverlay.classList.contains("active")) {
           helpOverlay.classList.remove("active");
           document.body.style.overflow = "";
-        });
-
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && helpOverlay.classList.contains("active")) {
-            helpOverlay.classList.remove("active");
-            document.body.style.overflow = "";
-          }
-        });
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

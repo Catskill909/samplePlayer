@@ -1,20 +1,21 @@
 /* dubEffects.css - updated */
 .dub-pads-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px; /* Reduced gap further */
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
     margin-top: 20px;
     padding: 8px;
     background: #1a1a1a;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    max-width: 400px; /* Control max width to keep pads together */
+    max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
 }
 
 .dub-pad {
-    width: 80px; /* Increased size */
+    width: 80px;
+    /* Increased size */
     height: 80px;
     background: #2d2d2d;
     border-radius: 8px;
@@ -28,7 +29,8 @@
     user-select: none;
     position: relative;
     overflow: hidden;
-    margin: 0 auto; /* Center in grid cell */
+    margin: 0 auto;
+    /* Center in grid cell */
 }
 
 .dub-pad:hover {
@@ -36,7 +38,8 @@
     border-color: #4d4d4d;
 }
 
-.dub-pad:active, .dub-pad.active {
+.dub-pad:active,
+.dub-pad.active {
     transform: scale(0.95);
     background: #3700b3;
     border-color: #bb86fc;
@@ -44,7 +47,8 @@
 }
 
 .dub-pad-label {
-    font-size: 0.7rem; /* Smaller font */
+    font-size: 0.7rem;
+    /* Smaller font */
     font-weight: 600;
     color: #bb86fc;
     margin-top: 4px;
@@ -53,9 +57,21 @@
 }
 
 .dub-pad-icon {
-    font-size: 16px; /* Smaller icon */
+    font-size: 16px;
+    /* Smaller icon */
     color: #bb86fc;
     margin-bottom: 4px;
+}
+
+.key-hint {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    font-family: monospace;
+    pointer-events: none;
 }
 
 /* Animation for active state */
@@ -64,8 +80,10 @@
         transform: scale(0);
         opacity: 0.8;
     }
+
     100% {
-        transform: scale(2); /* Reduced scale for smaller pads */
+        transform: scale(2);
+        /* Reduced scale for smaller pads */
         opacity: 0;
     }
 }

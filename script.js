@@ -191,15 +191,37 @@ class SamplePlayer {
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !e.repeat) {
-                e.preventDefault();
-                this.markTriggerPoint();
-            }
-            if (e.key >= '1' && e.key <= '4' && !e.repeat) {
+            if (e.repeat) return;
+
+            // Trigger points (1-4)
+            if (e.key >= '1' && e.key <= '4') {
                 const index = parseInt(e.key) - 1;
                 if (this.triggerPoints[index] !== null) {
                     this.startPlayback(this.triggerPoints[index]);
                 }
+            }
+
+            // Mark (Space)
+            if (e.code === 'Space') {
+                e.preventDefault();
+                this.markTriggerPoint();
+            }
+
+            // Dub Effects (Q, W, E, R, A, S, D, F)
+            const pad = document.querySelector(`.dub-pad[data-key="${e.key.toLowerCase()}"]`);
+            if (pad) {
+                pad.classList.add('active');
+                const effect = pad.dataset.effect;
+                this.dubEffects?.triggerEffect(effect, true);
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const pad = document.querySelector(`.dub-pad[data-key="${e.key.toLowerCase()}"]`);
+            if (pad) {
+                pad.classList.remove('active');
+                const effect = pad.dataset.effect;
+                this.dubEffects?.triggerEffect(effect, false);
             }
         });
 
@@ -324,6 +346,12 @@ class SamplePlayer {
                 marker.style.left = `${position}px`;
                 marker.dataset.time = time;
                 marker.dataset.index = index;
+
+                // Add number label
+                const label = document.createElement('div');
+                label.className = 'trigger-label';
+                label.textContent = index + 1;
+                marker.appendChild(label);
 
                 // Add drag start listener
                 marker.addEventListener('mousedown', (e) => this.handleDragStart(e, index));

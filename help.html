@@ -1,327 +1,340 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sample Player Help</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-    <style>
-      body {
-        background: transparent;
-        color: #ffffff;
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Oxygen, Ubuntu, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-      }
 
-      .help-wrapper {
-        position: relative;
-        max-width: 600px;
-        width: 90%;
-        height: 80vh;
-        border-radius: 12px;
-        background: #1a1a1a;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Sample Player Help</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    body {
+      background: transparent;
+      color: #ffffff;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-      .help-content {
-        height: 100%;
-        padding: 30px;
-        overflow-y: auto;
-        padding-bottom: 60px;
-        box-sizing: border-box;
-      }
+    .help-wrapper {
+      position: relative;
+      max-width: 600px;
+      width: 90%;
+      height: 80vh;
+      border-radius: 12px;
+      background: #1a1a1a;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
 
-      .gradient-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 50px;
-        width: 100%;
-        background: linear-gradient(
-          to bottom,
+    .help-content {
+      height: 100%;
+      padding: 30px;
+      overflow-y: auto;
+      padding-bottom: 60px;
+      box-sizing: border-box;
+    }
+
+    .gradient-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 50px;
+      width: 100%;
+      background: linear-gradient(to bottom,
           rgba(26, 26, 26, 0),
-          #1a1a1a 90%
-        );
-        pointer-events: none;
-        border-bottom-left-radius: 12px;
-        border-bottom-right-radius: 12px;
-        z-index: 1;
+          #1a1a1a 90%);
+      pointer-events: none;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      z-index: 1;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      opacity: 0.7;
+    }
+
+    .scroll-indicator i {
+      color: #ffffff;
+      font-size: 24px;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateX(-50%) translateY(0);
       }
 
-      .scroll-indicator {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: bounce 2s infinite;
+      40% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      60% {
+        transform: translateX(-50%) translateY(-5px);
+      }
+    }
+
+    .help-section {
+      margin-bottom: 24px;
+    }
+
+    .help-section h2 {
+      color: #ffffff;
+      margin-bottom: 16px;
+      font-size: 1.4em;
+    }
+
+    .help-section h3 {
+      color: #dadada;
+      margin: 16px 0 8px;
+      font-size: 1.1em;
+    }
+
+    .help-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .help-list li {
+      margin: 8px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .help-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #888888;
+    }
+
+    .keyboard-shortcut {
+      background: #2a2a2a;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin: 0 4px;
+      border: 1px solid #404040;
+    }
+
+    .note {
+      background: #2a2a2a;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 4px solid #808080;
+    }
+
+    @keyframes fadeOut {
+      from {
         opacity: 0.7;
       }
 
-      .scroll-indicator i {
-        color: #ffffff;
-        font-size: 24px;
+      to {
+        opacity: 0;
       }
+    }
 
-      @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateX(-50%) translateY(0);
-        }
-        40% {
-          transform: translateX(-50%) translateY(-10px);
-        }
-        60% {
-          transform: translateX(-50%) translateY(-5px);
-        }
-      }
+    .scroll-indicator.fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+  </style>
+</head>
 
-      .help-section {
-        margin-bottom: 24px;
-      }
+<body>
+  <div class="help-wrapper">
+    <div class="help-content" id="helpContent">
+      <div class="help-section">
+        <h2>Sample Trigger Player Guide</h2>
+        <p>
+          A tool for loading, marking, and triggering audio samples in
+          real-time.
+        </p>
+      </div>
 
-      .help-section h2 {
-        color: #ffffff;
-        margin-bottom: 16px;
-        font-size: 1.4em;
-      }
+      <div class="help-section">
+        <h3>Getting Started</h3>
+        <ul class="help-list">
+          <li>Click "Load Sample" to import a local audio file</li>
+          <li>Click "Browse Samples" to load remote samples</li>
+          <li>Press "Play" to start playback</li>
+          <li>Use the "Mark" button or spacebar to set trigger points</li>
+          <li>
+            Click trigger pads or use the number keys 1-4 to play from marked
+            points
+          </li>
+        </ul>
+      </div>
 
-      .help-section h3 {
-        color: #dadada;
-        margin: 16px 0 8px;
-        font-size: 1.1em;
-      }
+      <div class="help-section">
+        <h3>Keyboard Shortcuts</h3>
+        <ul class="help-list">
+          <li>
+            <span class="keyboard-shortcut">Space</span> Mark current position
+          </li>
+          <li>
+            <span class="keyboard-shortcut">1</span> -
+            <span class="keyboard-shortcut">4</span> Trigger respective sample
+            points
+          </li>
+          <li>
+            <span class="keyboard-shortcut">Q</span>
+            <span class="keyboard-shortcut">W</span>
+            <span class="keyboard-shortcut">E</span>
+            <span class="keyboard-shortcut">R</span>
+            <span class="keyboard-shortcut">A</span>
+            <span class="keyboard-shortcut">S</span>
+            <span class="keyboard-shortcut">D</span>
+            <span class="keyboard-shortcut">F</span>
+            Trigger Dub Effects
+          </li>
+        </ul>
+      </div>
 
-      .help-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
+      <div class="help-section">
+        <h3>Visual Indicators</h3>
+        <ul class="help-list">
+          <li>Blue playhead shows current position</li>
+          <li>Pink markers show trigger points</li>
+          <li>Shaded area shows played portion</li>
+          <li>Lit pads indicate marked positions</li>
+        </ul>
+      </div>
 
-      .help-list li {
-        margin: 8px 0;
-        padding-left: 20px;
-        position: relative;
-      }
+      <div class="help-section">
+        <h3>Working with Triggers</h3>
+        <ul class="help-list">
+          <li>Each pad can store one trigger point</li>
+          <li>Markers are set automatically to next available pad</li>
+          <li>Time stamps show exact trigger positions</li>
+          <li>Click any marked pad to start from that position</li>
+          <li><strong>Drag red lines</strong> to fine-tune trigger positions</li>
+        </ul>
+      </div>
 
-      .help-list li::before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: #888888;
-      }
-
-      .keyboard-shortcut {
-        background: #2a2a2a;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-family: monospace;
-        margin: 0 4px;
-        border: 1px solid #404040;
-      }
-
-      .note {
-        background: #2a2a2a;
-        padding: 12px;
-        border-radius: 6px;
-        margin: 12px 0;
-        border-left: 4px solid #808080;
-      }
-
-      @keyframes fadeOut {
-        from {
-          opacity: 0.7;
-        }
-        to {
-          opacity: 0;
-        }
-      }
-
-      .scroll-indicator.fade-out {
-        animation: fadeOut 0.5s ease-out forwards;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="help-wrapper">
-      <div class="help-content" id="helpContent">
-        <div class="help-section">
-          <h2>Sample Trigger Player Guide</h2>
-          <p>
-            A tool for loading, marking, and triggering audio samples in
-            real-time.
-          </p>
-        </div>
-
-        <div class="help-section">
-          <h3>Getting Started</h3>
+      <div class="help-section">
+        <h3>Trigger Point Storage</h3>
+        <ul class="help-list">
+          <li>Trigger points are automatically saved in your browser</li>
+          <li>
+            Points persist across browser sessions and internet connections
+          </li>
+          <li>Each sample's trigger points are saved separately</li>
+          <li>Storage is specific to the browser you're using</li>
+        </ul>
+        <div class="note">
+          <strong>Note:</strong> Trigger points will be lost when:
           <ul class="help-list">
-            <li>Click "Load Sample" to import a local audio file</li>
-            <li>Click "Browse Samples" to load remote samples</li>
-            <li>Press "Play" to start playback</li>
-            <li>Use the "Mark" button or spacebar to set trigger points</li>
-            <li>
-              Click trigger pads or use the number keys 1-4 to play from marked
-              points
-            </li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <h3>Keyboard Shortcuts</h3>
-          <ul class="help-list">
-            <li>
-              <span class="keyboard-shortcut">Space</span> Mark current position
-            </li>
-            <li>
-              <span class="keyboard-shortcut">1</span> -
-              <span class="keyboard-shortcut">4</span> Trigger respective sample
-              points
-            </li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <h3>Visual Indicators</h3>
-          <ul class="help-list">
-            <li>Blue playhead shows current position</li>
-            <li>Pink markers show trigger points</li>
-            <li>Shaded area shows played portion</li>
-            <li>Lit pads indicate marked positions</li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <h3>Working with Triggers</h3>
-          <ul class="help-list">
-            <li>Each pad can store one trigger point</li>
-            <li>Markers are set automatically to next available pad</li>
-            <li>Time stamps show exact trigger positions</li>
-            <li>Click any marked pad to start from that position</li>
-            <li><strong>Drag red lines</strong> to fine-tune trigger positions</li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <h3>Trigger Point Storage</h3>
-          <ul class="help-list">
-            <li>Trigger points are automatically saved in your browser</li>
-            <li>
-              Points persist across browser sessions and internet connections
-            </li>
-            <li>Each sample's trigger points are saved separately</li>
-            <li>Storage is specific to the browser you're using</li>
-          </ul>
-          <div class="note">
-            <strong>Note:</strong> Trigger points will be lost when:
-            <ul class="help-list">
-              <li>Using a different browser</li>
-              <li>Clearing browser data/cache</li>
-              <li>Using private/incognito mode</li>
-              <li>Switching to a different device</li>
-            </ul>
-          </div>
-        </div>
-        <div class="help-section">
-          <h3>Effects and Controls</h3>
-          <p>
-            Each effect pad in the Dub Effects panel can add unique audio
-            effects to your sample playback. To use an effect:
-          </p>
-          <ul class="help-list">
-            <li>Click or press down on a pad to activate the effect</li>
-            <li>Release the pad to deactivate the effect</li>
-            <li>Each effect has visual feedback to indicate activation</li>
-          </ul>
-        </div>
-
-        <div class="help-section">
-          <h3>Available Effects</h3>
-          <ul class="help-list">
-            <li>
-              <strong>Echo 1, Echo 2, Echo 3</strong>: Three variations of delay
-              effects, each with increasing delay time and depth, creating
-              layered echo effects.
-            </li>
-            <li>
-              <strong>Space</strong>: A reverb effect that adds a spacious,
-              ambient sound to the audio.
-            </li>
-            <li>
-              <strong>Tubby</strong>: A special delay effect with frequency
-              sweeps and resonance, creating a classic dub sound.
-            </li>
-            <li>
-              <strong>Drop</strong>: Emulates tape dropout, introducing a
-              slightly distorted, vintage sound.
-            </li>
-            <li>
-              <strong>Spring</strong>: A resonant reverb effect with a bouncy,
-              spring-like quality.
-            </li>
-            <li>
-              <strong>Ghost</strong>: Adds a subtle pitch modulation to create a
-              haunting echo effect.
-            </li>
-          </ul>
-          <p>
-            Experiment with different effects and combinations to add depth and
-            style to your playback experience!
-          </p>
-        </div>
-
-        <div class="help-section">
-          <h3>Best Practices</h3>
-          <ul class="help-list">
-            <li>
-              Set trigger points during first playback for consistent timing
-            </li>
-            <li>Use the waveform display to identify key sample sections</li>
-            <li>Clear all triggers if you want to start fresh</li>
-            <li>Check trigger point timing before live performance</li>
+            <li>Using a different browser</li>
+            <li>Clearing browser data/cache</li>
+            <li>Using private/incognito mode</li>
+            <li>Switching to a different device</li>
           </ul>
         </div>
       </div>
-      <div class="gradient-overlay"></div>
-      <div class="scroll-indicator" id="scrollIndicator">
-        <i class="fas fa-chevron-down"></i>
+      <div class="help-section">
+        <h3>Effects and Controls</h3>
+        <p>
+          Each effect pad in the Dub Effects panel can add unique audio
+          effects to your sample playback. To use an effect:
+        </p>
+        <ul class="help-list">
+          <li>Click or press down on a pad to activate the effect</li>
+          <li>Release the pad to deactivate the effect</li>
+          <li>Each effect has visual feedback to indicate activation</li>
+        </ul>
+      </div>
+
+      <div class="help-section">
+        <h3>Available Effects</h3>
+        <ul class="help-list">
+          <li>
+            <strong>Echo 1, Echo 2, Echo 3</strong>: Three variations of delay
+            effects, each with increasing delay time and depth, creating
+            layered echo effects.
+          </li>
+          <li>
+            <strong>Space</strong>: A reverb effect that adds a spacious,
+            ambient sound to the audio.
+          </li>
+          <li>
+            <strong>Tubby</strong>: A special delay effect with frequency
+            sweeps and resonance, creating a classic dub sound.
+          </li>
+          <li>
+            <strong>Drop</strong>: Emulates tape dropout, introducing a
+            slightly distorted, vintage sound.
+          </li>
+          <li>
+            <strong>Spring</strong>: A resonant reverb effect with a bouncy,
+            spring-like quality.
+          </li>
+          <li>
+            <strong>Ghost</strong>: Adds a subtle pitch modulation to create a
+            haunting echo effect.
+          </li>
+        </ul>
+        <p>
+          Experiment with different effects and combinations to add depth and
+          style to your playback experience!
+        </p>
+      </div>
+
+      <div class="help-section">
+        <h3>Best Practices</h3>
+        <ul class="help-list">
+          <li>
+            Set trigger points during first playback for consistent timing
+          </li>
+          <li>Use the waveform display to identify key sample sections</li>
+          <li>Clear all triggers if you want to start fresh</li>
+          <li>Check trigger point timing before live performance</li>
+        </ul>
       </div>
     </div>
+    <div class="gradient-overlay"></div>
+    <div class="scroll-indicator" id="scrollIndicator">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var helpContent = document.getElementById("helpContent");
-        var scrollIndicator = document.getElementById("scrollIndicator");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var helpContent = document.getElementById("helpContent");
+      var scrollIndicator = document.getElementById("scrollIndicator");
 
-        // Add fade out after 3 seconds
-        setTimeout(() => {
-          scrollIndicator.classList.add("fade-out");
-        }, 3000);
+      // Add fade out after 3 seconds
+      setTimeout(() => {
+        scrollIndicator.classList.add("fade-out");
+      }, 3000);
 
-        function toggleScrollIndicator() {
-          if (
-            helpContent.scrollHeight - helpContent.scrollTop <=
-            helpContent.clientHeight + 1
-          ) {
-            scrollIndicator.style.display = "none";
-          } else {
-            scrollIndicator.style.display = "block";
-            scrollIndicator.classList.remove("fade-out"); // Show it again when needed
-          }
+      function toggleScrollIndicator() {
+        if (
+          helpContent.scrollHeight - helpContent.scrollTop <=
+          helpContent.clientHeight + 1
+        ) {
+          scrollIndicator.style.display = "none";
+        } else {
+          scrollIndicator.style.display = "block";
+          scrollIndicator.classList.remove("fade-out"); // Show it again when needed
         }
+      }
 
-        toggleScrollIndicator();
-        helpContent.addEventListener("scroll", toggleScrollIndicator);
-      });
-    </script>
-  </body>
+      toggleScrollIndicator();
+      helpContent.addEventListener("scroll", toggleScrollIndicator);
+    });
+  </script>
+</body>
+
 </html>
