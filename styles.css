@@ -50,7 +50,7 @@ body {
     left: 0;
     height: 100%;
     width: 0;
-    background: rgba(187, 134, 252, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     pointer-events: none;
     transition: width 0.1s linear;
     z-index: 1;
@@ -121,7 +121,7 @@ body {
 
 .trigger-label {
     position: absolute;
-    bottom: -25px;
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
     width: 20px;
@@ -398,17 +398,26 @@ input[type="file"] {
 }
 
 .sample-title {
-    text-align: center;
-    margin: 15px 0;
-    font-size: 1.25rem;
-    font-weight: 900;
-    color: #bb86fc;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    border-bottom-left-radius: 8px;
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateX(10px);
     transition: all 0.3s ease;
+    z-index: 4;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .sample-title.active {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }

@@ -7,7 +7,10 @@ A web-based audio sample player designed for real-time performance and sound man
 ### 🎧 Sample Playback
 - **Load Samples**: Import local audio files or browse the built-in library of OSS sounds, Reggae skits, and Sirens.
 - **Visual Waveform**: Interactive waveform display with a playhead and trigger markers.
+- **Enhanced Progress Visualization**: Dark overlay on played portion of waveform for clear visual feedback.
+- **Live Playback Overlay**: Top-right corner display showing sample name, current position, and total duration in real-time.
 - **Trigger Points**: Set up to 4 cue points per sample to jump to specific parts of the audio instantly.
+- **Numbered Triggers**: Each trigger point shows its number (1-4) at the bottom of the marker line.
 - **Draggable Triggers**: Fine-tune your cue points by dragging the red trigger lines directly on the waveform.
 
 ### 🎹 Performance Controls

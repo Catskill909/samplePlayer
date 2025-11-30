@@ -11,6 +11,7 @@ class SamplePlayer {
         this.playheadPosition = 0;
         this.mediaElements = new Set(); // Track media elements for cleanup
         this.currentSampleUrl = null;
+        this.currentSampleName = null; // Track sample display name
         this.dubEffects = null;
         this.draggingIndex = null; // Track which trigger is being dragged
 
@@ -401,6 +402,17 @@ class SamplePlayer {
         this.elements.playhead.style.left = `${currentPosition}px`;
         this.elements.progressOverlay.style.width = `${currentPosition}px`;
 
+        // Update title with current playback position
+        if (this.currentSampleName && this.audioBuffer) {
+            const currentMins = Math.floor(currentTime / 60);
+            const currentSecs = Math.floor(currentTime % 60);
+            const totalMins = Math.floor(this.audioBuffer.duration / 60);
+            const totalSecs = Math.floor(this.audioBuffer.duration % 60);
+            const currentText = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+            const totalText = `${totalMins}:${totalSecs.toString().padStart(2, '0')}`;
+            this.elements.sampleTitle.textContent = `${this.currentSampleName} • ${currentText} / ${totalText}`;
+        }
+
         if (currentTime >= this.audioBuffer.duration) {
             this.stopPlayback();
             return;
@@ -453,6 +465,14 @@ class SamplePlayer {
         cancelAnimationFrame(this.animationId);
 
         this.elements.playButton.textContent = 'Play';
+
+        // Reset title to show static duration
+        if (this.currentSampleName && this.audioBuffer) {
+            const durationMins = Math.floor(this.audioBuffer.duration / 60);
+            const durationSecs = Math.floor(this.audioBuffer.duration % 60);
+            const durationText = `${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+            this.elements.sampleTitle.textContent = `${this.currentSampleName} • ${durationText}`;
+        }
         this.elements.playhead.style.left = '0';
         this.elements.progressOverlay.style.width = '0';
     }
@@ -530,7 +550,10 @@ class SamplePlayer {
             }
         }
 
-        // Update the title with animation
+        // Store the sample name for use during playback
+        this.currentSampleName = sampleName;
+
+        // Update the title with animation (without duration initially)
         this.elements.sampleTitle.textContent = sampleName;
         this.elements.sampleTitle.classList.remove('active');
         // Force browser reflow
@@ -564,6 +587,12 @@ class SamplePlayer {
 
                         this.elements.playButton.disabled = false;
                         this.elements.markButton.disabled = false;
+
+                        // Update title with duration
+                        const durationMins = Math.floor(this.audioBuffer.duration / 60);
+                        const durationSecs = Math.floor(this.audioBuffer.duration % 60);
+                        const durationText = `${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+                        this.elements.sampleTitle.textContent = `${sampleName} • ${durationText}`;
 
                         // First check if we have saved trigger points
                         const savedData = localStorage.getItem(`triggerPoints_${url}`);
