@@ -79,10 +79,7 @@
 </head>
 
 <body>
-  <div class="app-title">
-    <h1>OSS Sample Player</h1>
-  </div>
-  <!-- Help Button -->
+  <!-- Help Button (floating) -->
   <button class="help-trigger" id="helpTrigger" aria-label="Show Help">
     <i class="fas fa-question"></i>
   </button>
@@ -117,6 +114,7 @@
         </div>
         <canvas id="spectrogram"></canvas>
         <div class="playhead" id="playhead"></div>
+        <div class="selection-hint" id="selectionHint">Drag to select a region</div>
       </div>
       <div class="trigger-markers" id="triggerMarkers"></div>
       <div class="sample-title" id="sampleTitle"></div>
@@ -125,6 +123,10 @@
       </button>
     </div>
     <div class="pads-container" id="padsContainer">
+      <div class="trigger-pad start-pad" data-index="-1">
+        <i class="fas fa-play"></i>
+        <span class="time-marker">START</span>
+      </div>
       <div class="trigger-pad" data-index="0">
         <span>1</span>
         <span class="time-marker"></span>

@@ -1,76 +1,87 @@
-/* dubEffects.css - updated */
+/* dubEffects.css - Hardware style */
 .dub-pads-container {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    gap: 8px;
+    gap: 12px;
     margin-top: 20px;
-    padding: 8px;
-    background: #1a1a1a;
+    padding: 20px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0, 0, 0, 0.3);
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
+    border: 1px solid #2a2a2a;
 }
 
 .dub-pad {
-    width: 80px;
-    /* Increased size */
-    height: 80px;
-    background: #2d2d2d;
-    border-radius: 8px;
-    border: 2px solid #3d3d3d;
+    width: 110px;
+    height: 110px;
+    background: linear-gradient(145deg, #2d2d2d 0%, #1f1f1f 100%);
+    border-radius: 6px;
+    border: 1px solid #3a3a3a;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s ease;
+    transition: all 0.1s ease;
     user-select: none;
     position: relative;
     overflow: hidden;
     margin: 0 auto;
-    /* Center in grid cell */
+    box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .dub-pad:hover {
-    background: #333333;
-    border-color: #4d4d4d;
+    background: linear-gradient(145deg, #353535 0%, #282828 100%);
+    border-color: #454545;
 }
 
 .dub-pad:active,
 .dub-pad.active {
-    transform: scale(0.95);
-    background: #3700b3;
-    border-color: #bb86fc;
-    box-shadow: 0 0 20px rgba(187, 134, 252, 0.3);
+    transform: scale(0.96);
+    background: linear-gradient(145deg, #ff9500 0%, #cc7700 100%);
+    border-color: #ffb347;
+    box-shadow: 
+        0 0 20px rgba(255, 149, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dub-pad.active .dub-pad-label,
+.dub-pad.active .dub-pad-icon {
+    color: #1a1a1a;
 }
 
 .dub-pad-label {
-    font-size: 0.7rem;
-    /* Smaller font */
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #bb86fc;
-    margin-top: 4px;
+    color: #888;
+    margin-top: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    transition: color 0.1s ease;
 }
 
 .dub-pad-icon {
-    font-size: 16px;
-    /* Smaller icon */
-    color: #bb86fc;
-    margin-bottom: 4px;
+    font-size: 22px;
+    color: #888;
+    margin-bottom: 2px;
+    transition: color 0.1s ease;
 }
 
 .key-hint {
     position: absolute;
-    top: 5px;
+    top: 6px;
     right: 8px;
-    font-size: 10px;
+    font-size: 12px;
     color: rgba(255, 255, 255, 0.5);
     font-weight: bold;
-    font-family: monospace;
+    font-family: 'Monaco', 'Menlo', monospace;
     pointer-events: none;
 }
 
@@ -78,12 +89,11 @@
 @keyframes ripple {
     0% {
         transform: scale(0);
-        opacity: 0.8;
+        opacity: 0.6;
     }
 
     100% {
         transform: scale(2);
-        /* Reduced scale for smaller pads */
         opacity: 0;
     }
 }
@@ -93,7 +103,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(187, 134, 252, 0.2);
+    background: rgba(255, 149, 0, 0.3);
     border-radius: 50%;
-    animation: ripple 1s ease-out infinite;
+    animation: ripple 0.8s ease-out infinite;
 }

@@ -3,6 +3,7 @@ class SamplePlayer {
         this.audioContext = null;
         this.audioBuffer = null;
         this.sourceNode = null;
+        this.gainNode = null; // For smooth fade-out
         this.isPlaying = false;
         this.startTime = 0;
         this.triggerPoints = new Array(4).fill(null);
@@ -50,6 +51,7 @@ class SamplePlayer {
             this.cleanup();
         });
     }
+
     saveTriggerPoints() {
         if (!this.currentSampleUrl) return;
 
@@ -82,9 +84,10 @@ class SamplePlayer {
 
             console.log('Loaded trigger points for:', this.currentSampleUrl); // Debug log
 
-            document.querySelectorAll('.trigger-pad').forEach((pad, index) => {
+            document.querySelectorAll('.trigger-pad:not(.start-pad)').forEach((pad) => {
+                const index = parseInt(pad.dataset.index);
                 const triggerTime = this.triggerPoints[index];
-                if (triggerTime !== null) {
+                if (triggerTime !== null && triggerTime !== undefined) {
                     pad.classList.add('marked');
                     pad.querySelector('.time-marker').textContent = this.formatTime(triggerTime);
                 } else {
@@ -208,6 +211,9 @@ class SamplePlayer {
         this.elements.markButton.addEventListener('click', () => this.markTriggerPoint());
 
         this.elements.clearButton?.addEventListener('click', () => {
+            // Clear selection if exists
+            this.clearSelection();
+            // Clear trigger points if any exist
             if (this.triggerPoints.some(point => point !== null)) {
                 this.resetTriggers();
             }
@@ -215,6 +221,13 @@ class SamplePlayer {
 
         document.addEventListener('keydown', (e) => {
             if (e.repeat) return;
+
+            // Start trigger (0 key)
+            if (e.key === '0') {
+                if (this.audioBuffer) {
+                    this.startPlayback(0);
+                }
+            }
 
             // Trigger points (1-4)
             if (e.key >= '1' && e.key <= '4') {
@@ -252,7 +265,12 @@ class SamplePlayer {
             const pad = e.target.closest('.trigger-pad');
             if (pad) {
                 const index = parseInt(pad.dataset.index);
-                if (this.triggerPoints[index] !== null) {
+                // Start pad (index -1) always plays from beginning
+                if (index === -1) {
+                    if (this.audioBuffer) {
+                        this.startPlayback(0);
+                    }
+                } else if (this.triggerPoints[index] !== null) {
                     this.startPlayback(this.triggerPoints[index]);
                 }
             }
@@ -377,6 +395,13 @@ class SamplePlayer {
         this.selectionStartX = x;
         this.selectionStart = (x / rect.width) * this.audioBuffer.duration;
         this.selectionEnd = this.selectionStart;
+
+        // Hide the selection hint immediately when user starts selecting
+        const hint = document.getElementById('selectionHint');
+        if (hint) {
+            hint.classList.remove('visible');
+            localStorage.setItem('selectionHintShown', 'true');
+        }
 
         // Clear any existing selection visual
         this.updateSelectionOverlay();
@@ -551,8 +576,13 @@ class SamplePlayer {
             this.ctx.lineTo(i, (1 + max) * amp);
         }
 
-        this.ctx.strokeStyle = '#bb86fc';
+        // Vintage green LCD waveform color
+        this.ctx.strokeStyle = '#39ff14';
+        this.ctx.lineWidth = 1;
+        this.ctx.shadowColor = '#39ff14';
+        this.ctx.shadowBlur = 2;
         this.ctx.stroke();
+        this.ctx.shadowBlur = 0;
     }
 
     updatePlayhead() {
@@ -568,15 +598,13 @@ class SamplePlayer {
         this.elements.playhead.style.left = `${currentPosition}px`;
         this.elements.progressOverlay.style.width = `${currentPosition}px`;
 
-        // Update title with current playback position
+        // Update title with countdown (time remaining)
         if (this.currentSampleName && this.audioBuffer) {
-            const currentMins = Math.floor(currentTime / 60);
-            const currentSecs = Math.floor(currentTime % 60);
-            const totalMins = Math.floor(this.audioBuffer.duration / 60);
-            const totalSecs = Math.floor(this.audioBuffer.duration % 60);
-            const currentText = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-            const totalText = `${totalMins}:${totalSecs.toString().padStart(2, '0')}`;
-            this.elements.sampleTitle.textContent = `${this.currentSampleName} • ${currentText} / ${totalText}`;
+            const remainingTime = Math.max(0, this.audioBuffer.duration - currentTime);
+            const remainingMins = Math.floor(remainingTime / 60);
+            const remainingSecs = Math.floor(remainingTime % 60);
+            const remainingText = `${remainingMins}:${remainingSecs.toString().padStart(2, '0')}`;
+            this.elements.sampleTitle.textContent = `${this.currentSampleName} • ${remainingText}`;
         }
 
         // Stop at selection end if playing selection
@@ -609,10 +637,16 @@ class SamplePlayer {
 
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
+
+        // Create gain node for smooth fade-out (prevents click)
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.gain.value = 1;
+
+        this.sourceNode.connect(this.gainNode);
         if (this.dubEffects) {
-            this.dubEffects.connectSource(this.sourceNode);
+            this.dubEffects.connectSource(this.gainNode);
         }
-        this.sourceNode.connect(this.audioContext.destination);
+        this.gainNode.connect(this.audioContext.destination);
 
         const initialPosition = Math.floor((offset / this.audioBuffer.duration) * this.elements.waveform.offsetWidth);
         this.elements.playhead.style.left = `${initialPosition}px`;
@@ -629,9 +663,25 @@ class SamplePlayer {
     stopPlayback() {
         if (!this.isPlaying) return;
 
-        this.sourceNode.stop();
-        this.sourceNode.disconnect();
+        // Quick fade-out to prevent click
+        if (this.gainNode && this.audioContext) {
+            const now = this.audioContext.currentTime;
+            this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
+            this.gainNode.gain.linearRampToValueAtTime(0, now + 0.015);
+        }
+
+        // Stop immediately but the fade prevents the click
+        try {
+            this.sourceNode?.stop(this.audioContext.currentTime + 0.015);
+        } catch (e) {
+            // Ignore if already stopped
+        }
+
+        this.sourceNode?.disconnect();
+        this.gainNode?.disconnect();
         this.sourceNode = null;
+        this.gainNode = null;
+
         this.isPlaying = false;
         this.playheadPosition = 0;
         this.playingSelection = false;
@@ -676,7 +726,7 @@ class SamplePlayer {
         this.triggerPoints = new Array(4).fill(null);
         this.currentPadIndex = 0;
 
-        document.querySelectorAll('.trigger-pad').forEach(pad => {
+        document.querySelectorAll('.trigger-pad:not(.start-pad)').forEach(pad => {
             pad.classList.remove('marked');
             pad.classList.add('cleared');
             pad.querySelector('.time-marker').textContent = '';
