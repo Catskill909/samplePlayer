@@ -34,6 +34,7 @@ class SamplePlayer {
         this.selectionEnd = null; // Time in seconds
         this.selectionStartX = null; // Pixel position for drag start
         this.playingSelection = false; // Track if playing selection only
+        this.loopingSelection = false; // Track if looping selection
         this.draggingHandle = null; // Track which selection handle is being dragged ('left' or 'right')
 
         this.elements = {
@@ -50,6 +51,7 @@ class SamplePlayer {
             sampleTitle: document.getElementById('sampleTitle'),
             selectionOverlay: document.getElementById('selectionOverlay'),
             playSelectionBtn: document.getElementById('playSelectionBtn'),
+            loopSelectionBtn: document.getElementById('loopSelectionBtn'),
             vuFillL: document.getElementById('vuFillL'),
             vuFillR: document.getElementById('vuFillR'),
             vuPeakL: document.getElementById('vuPeakL'),
@@ -179,6 +181,9 @@ class SamplePlayer {
 
         // Play Selection button
         this.elements.playSelectionBtn?.addEventListener('click', () => this.playSelection());
+
+        // Loop Selection button
+        this.elements.loopSelectionBtn?.addEventListener('click', () => this.toggleLoopSelection());
 
         this.elements.audioInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -387,9 +392,10 @@ class SamplePlayer {
 
     // Selection handling methods
     handleSelectionStart(e) {
-        // Don't start selection if clicking on a trigger marker or the play selection button
+        // Don't start selection if clicking on a trigger marker or the play/loop selection buttons
         if (e.target.closest('.trigger-marker')) return;
         if (e.target.closest('.play-selection-btn')) return;
+        if (e.target.closest('.loop-selection-btn')) return;
         if (!this.audioBuffer) return;
 
         // Check if clicking on a selection handle
@@ -503,17 +509,26 @@ class SamplePlayer {
     showPlaySelectionButton() {
         if (!this.elements.playSelectionBtn) return;
         this.elements.playSelectionBtn.classList.add('visible');
+        if (this.elements.loopSelectionBtn) {
+            this.elements.loopSelectionBtn.classList.add('visible');
+        }
     }
 
     hidePlaySelectionButton() {
         if (!this.elements.playSelectionBtn) return;
         this.elements.playSelectionBtn.classList.remove('visible');
+        if (this.elements.loopSelectionBtn) {
+            this.elements.loopSelectionBtn.classList.remove('visible');
+            this.elements.loopSelectionBtn.classList.remove('active');
+        }
+        this.loopingSelection = false;
     }
 
     clearSelection() {
         this.selectionStart = null;
         this.selectionEnd = null;
         this.playingSelection = false;
+        this.loopingSelection = false;
 
         if (this.elements.selectionOverlay) {
             this.elements.selectionOverlay.classList.remove('active');
@@ -534,6 +549,26 @@ class SamplePlayer {
         // Start playback first, then set the flag (since startPlayback may call stopPlayback which resets it)
         this.startPlayback(start);
         this.playingSelection = true;
+    }
+
+    toggleLoopSelection() {
+        if (this.selectionStart === null || this.selectionEnd === null) return;
+
+        // Toggle loop mode
+        this.loopingSelection = !this.loopingSelection;
+
+        if (this.elements.loopSelectionBtn) {
+            this.elements.loopSelectionBtn.classList.toggle('active', this.loopingSelection);
+        }
+
+        // If enabling loop and not currently playing selection, start playing
+        if (this.loopingSelection && (!this.isPlaying || !this.playingSelection)) {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            this.selectionPlayEnd = end;
+            this.startPlayback(start);
+            this.playingSelection = true;
+        }
     }
 
     formatTime(seconds) {
@@ -623,10 +658,24 @@ class SamplePlayer {
             this.elements.sampleTitle.textContent = `${this.currentSampleName} • ${remainingText}`;
         }
 
-        // Stop at selection end if playing selection
+        // Stop at selection end if playing selection (or loop if looping is enabled)
         if (this.playingSelection && currentTime >= this.selectionPlayEnd) {
-            this.stopPlayback();
-            return;
+            if (this.loopingSelection) {
+                // Loop back to selection start - preserve loop state through restart
+                const start = Math.min(this.selectionStart, this.selectionEnd);
+                const end = Math.max(this.selectionStart, this.selectionEnd);
+                this.startPlayback(start);
+                this.playingSelection = true;
+                this.loopingSelection = true;
+                this.selectionPlayEnd = end;
+                if (this.elements.loopSelectionBtn) {
+                    this.elements.loopSelectionBtn.classList.add('active');
+                }
+                return;
+            } else {
+                this.stopPlayback();
+                return;
+            }
         }
 
         if (currentTime >= this.audioBuffer.duration) {
@@ -832,6 +881,13 @@ class SamplePlayer {
         this.isPlaying = false;
         this.playheadPosition = 0;
         this.playingSelection = false;
+        this.loopingSelection = false;
+
+        // Update loop button visual state
+        if (this.elements.loopSelectionBtn) {
+            this.elements.loopSelectionBtn.classList.remove('active');
+        }
+
         cancelAnimationFrame(this.animationId);
         cancelAnimationFrame(this.vuAnimationId);
 

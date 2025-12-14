@@ -12,6 +12,8 @@ A web-based audio sample player designed for real-time performance and sound man
 - **Trigger Points**: Set up to 4 cue points per sample to jump to specific parts of the audio instantly.
 - **Numbered Triggers**: Each trigger point shows its number (1-4) at the bottom of the marker line.
 - **Draggable Triggers**: Fine-tune your cue points by dragging the red trigger lines directly on the waveform.
+- **Selection Tool**: Click and drag on the waveform to select a region for focused playback.
+- **Loop Selection**: Continuously loop the selected region with the Loop button.
 
 ### 🎹 Performance Controls
 - **Trigger Pads**: 4 pads mapped to keys `1-4` for instant playback from cue points.

@@ -19,7 +19,7 @@ This document outlines potential features, improvements, and technical debt to a
 ## 🎯 High Priority Features
 
 ### Audio Engine
-- [ ] **Loop Selection**: Toggle to loop the selected region continuously
+- [x] **Loop Selection**: Toggle to loop the selected region continuously
 - [ ] **Chop Mode**: Auto-divide sample into equal segments (4, 8, 16 slices)
 - [ ] **BPM Detection**: Analyze sample tempo for synced loops
 - [ ] **Pitch/Speed Control**: Real-time pitch shifting without affecting tempo

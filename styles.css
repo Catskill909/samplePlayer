@@ -675,6 +675,66 @@ input[type="file"] {
     visibility: visible;
 }
 
+/* Loop Selection Button */
+.loop-selection-btn {
+    position: absolute;
+    bottom: -45px;
+    left: calc(50% + 85px);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 10;
+}
+
+.loop-selection-btn:hover {
+    background: linear-gradient(180deg, #555 0%, #454545 100%);
+    color: #fff;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.loop-selection-btn:active {
+    transform: translateY(1px);
+}
+
+.loop-selection-btn.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loop-selection-btn.active {
+    background: linear-gradient(180deg, #39ff14 0%, #2ecc0f 100%);
+    color: #1a1a1a;
+    border-color: #4dff28;
+    box-shadow: 
+        0 2px 12px rgba(57, 255, 20, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.loop-selection-btn.active:hover {
+    background: linear-gradient(180deg, #4dff28 0%, #39ff14 100%);
+    box-shadow: 
+        0 4px 16px rgba(57, 255, 20, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
 /* ============================================
    VU METER - Realistic LED Style
    ============================================ */
