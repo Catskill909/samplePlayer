@@ -15,8 +15,8 @@
       position: fixed;
       top: 20px;
       left: 20px;
-      background: white;
-      border: none;
+      background: linear-gradient(145deg, #3a3a3a 0%, #252525 100%);
+      border: 1px solid #444;
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -24,13 +24,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
       z-index: 100;
+      transition: all 0.15s ease;
+    }
+
+    .help-trigger:hover {
+      background: linear-gradient(145deg, #454545 0%, #303030 100%);
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .help-trigger:active {
+      transform: scale(0.95);
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .help-trigger i {
-      font-size: 24px;
-      color: black;
+      font-size: 20px;
+      color: #aaa;
+    }
+
+    .help-trigger:hover i {
+      color: #fff;
     }
 
     .help-overlay {
@@ -52,8 +75,8 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: white;
-      border: none;
+      background: linear-gradient(145deg, #3a3a3a 0%, #252525 100%);
+      border: 1px solid #444;
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -61,13 +84,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
       z-index: 1001;
+      transition: all 0.15s ease;
+    }
+
+    .close-help:hover {
+      background: linear-gradient(145deg, #454545 0%, #303030 100%);
+    }
+
+    .close-help:active {
+      transform: scale(0.95);
     }
 
     .close-help i {
-      font-size: 24px;
-      color: black;
+      font-size: 20px;
+      color: #aaa;
+    }
+
+    .close-help:hover i {
+      color: #fff;
     }
 
     #helpFrame {
@@ -142,6 +181,34 @@
       <div class="trigger-pad" data-index="3">
         <span>4</span>
         <span class="time-marker"></span>
+      </div>
+
+      <!-- VU Meters - LED Bar Style -->
+      <div class="vu-meter-container">
+        <div class="vu-meter" id="vuMeterL">
+          <div class="vu-meter-label">L</div>
+          <div class="vu-meter-track">
+            <div class="vu-meter-fill" id="vuFillL"></div>
+            <div class="vu-meter-peak" id="vuPeakL"></div>
+            <div class="vu-meter-scale">
+              <span>0</span>
+              <span>-20</span>
+              <span>-40</span>
+            </div>
+          </div>
+        </div>
+        <div class="vu-meter" id="vuMeterR">
+          <div class="vu-meter-label">R</div>
+          <div class="vu-meter-track">
+            <div class="vu-meter-fill" id="vuFillR"></div>
+            <div class="vu-meter-peak" id="vuPeakR"></div>
+            <div class="vu-meter-scale">
+              <span>0</span>
+              <span>-20</span>
+              <span>-40</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

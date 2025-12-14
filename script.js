@@ -4,17 +4,29 @@ class SamplePlayer {
         this.audioBuffer = null;
         this.sourceNode = null;
         this.gainNode = null; // For smooth fade-out
+        this.analyserNodeL = null; // VU meter analyser - left channel
+        this.analyserNodeR = null; // VU meter analyser - right channel
+        this.splitterNode = null; // Channel splitter for stereo VU
         this.isPlaying = false;
         this.startTime = 0;
         this.triggerPoints = new Array(4).fill(null);
         this.currentPadIndex = 0;
         this.animationId = null;
+        this.vuAnimationId = null;
         this.playheadPosition = 0;
         this.mediaElements = new Set(); // Track media elements for cleanup
         this.currentSampleUrl = null;
         this.currentSampleName = null; // Track sample display name
         this.dubEffects = null;
         this.draggingIndex = null; // Track which trigger is being dragged
+
+        // VU meter state
+        this.peakL = 0;
+        this.peakR = 0;
+        this.peakHoldTimeL = 0;
+        this.peakHoldTimeR = 0;
+        this.peakDecayRate = 0.03;
+        this.peakHoldDuration = 45; // frames to hold peak
 
         // Selection state
         this.isSelecting = false;
@@ -37,7 +49,11 @@ class SamplePlayer {
             padsContainer: document.getElementById('padsContainer'),
             sampleTitle: document.getElementById('sampleTitle'),
             selectionOverlay: document.getElementById('selectionOverlay'),
-            playSelectionBtn: document.getElementById('playSelectionBtn')
+            playSelectionBtn: document.getElementById('playSelectionBtn'),
+            vuFillL: document.getElementById('vuFillL'),
+            vuFillR: document.getElementById('vuFillR'),
+            vuPeakL: document.getElementById('vuPeakL'),
+            vuPeakR: document.getElementById('vuPeakR')
         };
 
         this.ctx = this.elements.spectrogram.getContext('2d');
@@ -621,6 +637,119 @@ class SamplePlayer {
         this.animationId = requestAnimationFrame(() => this.updatePlayhead());
     }
 
+    updateVUMeters() {
+        if (!this.isPlaying || !this.analyserNodeL || !this.analyserNodeR) return;
+
+        const bufferLengthL = this.analyserNodeL.fftSize;
+        const bufferLengthR = this.analyserNodeR.fftSize;
+        const dataArrayL = new Float32Array(bufferLengthL);
+        const dataArrayR = new Float32Array(bufferLengthR);
+
+        // Use time domain data for accurate amplitude measurement
+        this.analyserNodeL.getFloatTimeDomainData(dataArrayL);
+        this.analyserNodeR.getFloatTimeDomainData(dataArrayR);
+
+        // Calculate RMS for left channel
+        let sumL = 0;
+        for (let i = 0; i < bufferLengthL; i++) {
+            sumL += dataArrayL[i] * dataArrayL[i];
+        }
+        const rmsL = Math.sqrt(sumL / bufferLengthL);
+
+        // Convert to dB scale (-60dB to 0dB range mapped to 0-100%)
+        // dB = 20 * log10(rms), where rms of 1.0 = 0dB
+        const dbL = rmsL > 0.0001 ? 20 * Math.log10(rmsL) : -60;
+        const percentL = Math.max(0, Math.min(100, ((dbL + 60) / 60) * 100));
+
+        // Calculate RMS for right channel
+        let sumR = 0;
+        for (let i = 0; i < bufferLengthR; i++) {
+            sumR += dataArrayR[i] * dataArrayR[i];
+        }
+        const rmsR = Math.sqrt(sumR / bufferLengthR);
+
+        const dbR = rmsR > 0.0001 ? 20 * Math.log10(rmsR) : -60;
+        const percentR = Math.max(0, Math.min(100, ((dbR + 60) / 60) * 100));
+
+        // Update meter fills
+        if (this.elements.vuFillL) {
+            this.elements.vuFillL.style.width = `${percentL}%`;
+            if (percentL > 90) {
+                this.elements.vuFillL.classList.add('hot');
+            } else {
+                this.elements.vuFillL.classList.remove('hot');
+            }
+        }
+        if (this.elements.vuFillR) {
+            this.elements.vuFillR.style.width = `${percentR}%`;
+            if (percentR > 90) {
+                this.elements.vuFillR.classList.add('hot');
+            } else {
+                this.elements.vuFillR.classList.remove('hot');
+            }
+        }
+
+        // Peak hold logic - Left channel
+        if (percentL > this.peakL) {
+            this.peakL = percentL;
+            this.peakHoldTimeL = this.peakHoldDuration;
+            if (this.elements.vuPeakL) this.elements.vuPeakL.classList.add('active');
+        } else {
+            if (this.peakHoldTimeL > 0) {
+                this.peakHoldTimeL--;
+            } else {
+                this.peakL = Math.max(0, this.peakL - this.peakDecayRate * 100);
+                if (this.peakL < 1 && this.elements.vuPeakL) {
+                    this.elements.vuPeakL.classList.remove('active');
+                }
+            }
+        }
+        if (this.elements.vuPeakL) this.elements.vuPeakL.style.left = `${this.peakL}%`;
+
+        // Peak hold logic - Right channel
+        if (percentR > this.peakR) {
+            this.peakR = percentR;
+            this.peakHoldTimeR = this.peakHoldDuration;
+            if (this.elements.vuPeakR) this.elements.vuPeakR.classList.add('active');
+        } else {
+            if (this.peakHoldTimeR > 0) {
+                this.peakHoldTimeR--;
+            } else {
+                this.peakR = Math.max(0, this.peakR - this.peakDecayRate * 100);
+                if (this.peakR < 1 && this.elements.vuPeakR) {
+                    this.elements.vuPeakR.classList.remove('active');
+                }
+            }
+        }
+        if (this.elements.vuPeakR) this.elements.vuPeakR.style.left = `${this.peakR}%`;
+
+        this.vuAnimationId = requestAnimationFrame(() => this.updateVUMeters());
+    }
+
+    resetVUMeters() {
+        this.peakL = 0;
+        this.peakR = 0;
+        this.peakHoldTimeL = 0;
+        this.peakHoldTimeR = 0;
+
+        if (this.elements.vuFillL) {
+            this.elements.vuFillL.style.width = '0%';
+            this.elements.vuFillL.classList.remove('hot');
+        }
+        if (this.elements.vuFillR) {
+            this.elements.vuFillR.style.width = '0%';
+            this.elements.vuFillR.classList.remove('hot');
+        }
+        if (this.elements.vuPeakL) {
+            this.elements.vuPeakL.style.left = '0%';
+            this.elements.vuPeakL.classList.remove('active');
+        }
+        if (this.elements.vuPeakR) {
+            this.elements.vuPeakR.style.left = '0%';
+            this.elements.vuPeakR.classList.remove('active');
+        }
+    }
+
     async startPlayback(offset = 0) {
         if (!this.audioBuffer) return;
 
@@ -642,7 +771,24 @@ class SamplePlayer {
         this.gainNode = this.audioContext.createGain();
         this.gainNode.gain.value = 1;
 
+        // Create analyser nodes for VU meter
+        this.analyserNodeL = this.audioContext.createAnalyser();
+        this.analyserNodeR = this.audioContext.createAnalyser();
+        this.analyserNodeL.fftSize = 256;
+        this.analyserNodeR.fftSize = 256;
+        this.analyserNodeL.smoothingTimeConstant = 0.8;
+        this.analyserNodeR.smoothingTimeConstant = 0.8;
+
+        // Create channel splitter for stereo metering
+        this.splitterNode = this.audioContext.createChannelSplitter(2);
+
         this.sourceNode.connect(this.gainNode);
+
+        // Connect for VU metering
+        this.gainNode.connect(this.splitterNode);
+        this.splitterNode.connect(this.analyserNodeL, 0);
+        this.splitterNode.connect(this.analyserNodeR, 1);
+
         if (this.dubEffects) {
             this.dubEffects.connectSource(this.gainNode);
         }
@@ -658,6 +804,7 @@ class SamplePlayer {
 
         this.elements.playButton.textContent = 'Stop';
         this.updatePlayhead();
+        this.updateVUMeters();
     }
 
     stopPlayback() {
@@ -686,6 +833,18 @@ class SamplePlayer {
         this.playheadPosition = 0;
         this.playingSelection = false;
         cancelAnimationFrame(this.animationId);
+        cancelAnimationFrame(this.vuAnimationId);
+
+        // Reset VU meters
+        this.resetVUMeters();
+
+        // Disconnect analyser nodes
+        this.analyserNodeL?.disconnect();
+        this.analyserNodeR?.disconnect();
+        this.splitterNode?.disconnect();
+        this.analyserNodeL = null;
+        this.analyserNodeR = null;
+        this.splitterNode = null;
 
         this.elements.playButton.textContent = 'Play';
 
