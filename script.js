@@ -14,7 +14,7 @@ class SamplePlayer {
         this.currentSampleName = null; // Track sample display name
         this.dubEffects = null;
         this.draggingIndex = null; // Track which trigger is being dragged
-        
+
         // Selection state
         this.isSelecting = false;
         this.selectionStart = null; // Time in seconds
@@ -148,16 +148,16 @@ class SamplePlayer {
         // Global drag listeners
         document.addEventListener('mousemove', (e) => this.handleDrag(e));
         document.addEventListener('mouseup', (e) => this.handleDragEnd(e));
-        
+
         // Selection listeners on waveform
         this.elements.waveform.addEventListener('mousedown', (e) => this.handleSelectionStart(e));
         document.addEventListener('mousemove', (e) => this.handleSelectionDrag(e));
         document.addEventListener('mouseup', (e) => this.handleSelectionEnd(e));
-        
+
         // Selection handle drag listeners
         document.addEventListener('mousemove', (e) => this.handleSelectionHandleDrag(e));
         document.addEventListener('mouseup', (e) => this.handleSelectionHandleDragEnd(e));
-        
+
         // Play Selection button
         this.elements.playSelectionBtn?.addEventListener('click', () => this.playSelection());
 
@@ -357,7 +357,7 @@ class SamplePlayer {
         if (e.target.closest('.trigger-marker')) return;
         if (e.target.closest('.play-selection-btn')) return;
         if (!this.audioBuffer) return;
-        
+
         // Check if clicking on a selection handle
         const handle = e.target.closest('.selection-handle');
         if (handle) {
@@ -372,15 +372,15 @@ class SamplePlayer {
 
         const rect = this.elements.waveform.getBoundingClientRect();
         const x = e.clientX - rect.left;
-        
+
         this.isSelecting = true;
         this.selectionStartX = x;
         this.selectionStart = (x / rect.width) * this.audioBuffer.duration;
         this.selectionEnd = this.selectionStart;
-        
+
         // Clear any existing selection visual
         this.updateSelectionOverlay();
-        
+
         document.body.style.userSelect = 'none';
     }
 
@@ -390,7 +390,7 @@ class SamplePlayer {
         const rect = this.elements.waveform.getBoundingClientRect();
         const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
         this.selectionEnd = (x / rect.width) * this.audioBuffer.duration;
-        
+
         this.updateSelectionOverlay();
     }
 
@@ -399,11 +399,11 @@ class SamplePlayer {
 
         this.isSelecting = false;
         document.body.style.userSelect = '';
-        
+
         // Only show button if there's a meaningful selection (at least 0.1 seconds)
         const start = Math.min(this.selectionStart, this.selectionEnd);
         const end = Math.max(this.selectionStart, this.selectionEnd);
-        
+
         if (end - start >= 0.1) {
             this.selectionStart = start;
             this.selectionEnd = end;
@@ -415,13 +415,13 @@ class SamplePlayer {
 
     handleSelectionHandleDrag(e) {
         if (!this.draggingHandle || !this.audioBuffer) return;
-        
+
         e.preventDefault();
-        
+
         const rect = this.elements.waveform.getBoundingClientRect();
         const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
         const newTime = (x / rect.width) * this.audioBuffer.duration;
-        
+
         if (this.draggingHandle === 'left') {
             // Don't let left handle go past right handle
             this.selectionStart = Math.min(newTime, this.selectionEnd - 0.05);
@@ -429,16 +429,16 @@ class SamplePlayer {
             // Don't let right handle go past left handle
             this.selectionEnd = Math.max(newTime, this.selectionStart + 0.05);
         }
-        
+
         this.updateSelectionOverlay();
     }
 
     handleSelectionHandleDragEnd(e) {
         if (!this.draggingHandle) return;
-        
+
         // Remove dragging class from handles
         document.querySelectorAll('.selection-handle').forEach(h => h.classList.remove('dragging'));
-        
+
         this.draggingHandle = null;
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
@@ -446,14 +446,14 @@ class SamplePlayer {
 
     updateSelectionOverlay() {
         if (!this.elements.selectionOverlay || !this.audioBuffer) return;
-        
+
         const waveformWidth = this.elements.waveform.offsetWidth;
         const start = Math.min(this.selectionStart, this.selectionEnd);
         const end = Math.max(this.selectionStart, this.selectionEnd);
-        
+
         const leftPos = (start / this.audioBuffer.duration) * waveformWidth;
         const width = ((end - start) / this.audioBuffer.duration) * waveformWidth;
-        
+
         this.elements.selectionOverlay.style.left = `${leftPos}px`;
         this.elements.selectionOverlay.style.width = `${width}px`;
         this.elements.selectionOverlay.classList.add('active');
@@ -473,7 +473,7 @@ class SamplePlayer {
         this.selectionStart = null;
         this.selectionEnd = null;
         this.playingSelection = false;
-        
+
         if (this.elements.selectionOverlay) {
             this.elements.selectionOverlay.classList.remove('active');
             this.elements.selectionOverlay.style.width = '0';
@@ -483,13 +483,13 @@ class SamplePlayer {
 
     playSelection() {
         if (this.selectionStart === null || this.selectionEnd === null) return;
-        
+
         const start = Math.min(this.selectionStart, this.selectionEnd);
         const end = Math.max(this.selectionStart, this.selectionEnd);
-        
+
         // Store selection end before starting playback
         this.selectionPlayEnd = end;
-        
+
         // Start playback first, then set the flag (since startPlayback may call stopPlayback which resets it)
         this.startPlayback(start);
         this.playingSelection = true;
@@ -687,7 +687,7 @@ class SamplePlayer {
         });
 
         this.elements.triggerMarkers.innerHTML = '';
-        
+
         // Clear any selection
         this.clearSelection();
 
@@ -702,7 +702,7 @@ class SamplePlayer {
         if (this.isPlaying) {
             this.stopPlayback();
         }
-        
+
         // Clear any existing selection
         this.clearSelection();
 
