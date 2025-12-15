@@ -195,17 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVolumeDisplay(1.0);
 
     // ==========================================
-    // HELP SYSTEM (simple, original)
+    // HELP SYSTEM (direct HTML, no iframe)
     // ==========================================
     const helpTrigger = document.getElementById('helpTrigger');
     const helpOverlay = document.getElementById('helpOverlay');
     const closeHelp = document.getElementById('closeHelp');
-    const helpFrame = document.getElementById('helpFrame');
 
     helpTrigger?.addEventListener('click', () => {
-        // Force reload help.html every time to avoid cache issues
-        // Add timestamp to bust cache
-        helpFrame.src = 'help.html?t=' + Date.now();
         helpOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
@@ -217,14 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && helpOverlay.classList.contains('active')) {
-            helpOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-
-    // Listen for messages from help.html iframe
-    window.addEventListener('message', (event) => {
-        if (event.data === 'closeHelp') {
             helpOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }

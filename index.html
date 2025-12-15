@@ -92,16 +92,58 @@
       color: #fff;
     }
 
-    #helpFrame {
+    #helpContent {
       width: 90vw;
+      max-width: 800px;
       height: 90vh;
-      border: none;
-      background: transparent;
-      color: #111;
+      background: #1a1a1a;
+      color: #fff;
       margin: 2vh auto;
+      padding: 40px;
       display: block;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       border-radius: 8px;
+      overflow-y: auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    #helpContent h2 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.5em;
+    }
+
+    #helpContent h3 {
+      color: #dadada;
+      margin-top: 24px;
+      font-size: 1.2em;
+    }
+
+    #helpContent ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #helpContent li {
+      margin: 8px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    #helpContent li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #888;
+    }
+
+    #helpContent kbd {
+      background: #2a2a2a;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      border: 1px solid #404040;
+      margin: 0 4px;
     }
   </style>
 </head>
@@ -139,7 +181,37 @@
     <button class="close-help" id="closeHelp" aria-label="Close Help">
       <i class="fas fa-times"></i>
     </button>
-    <iframe id="helpFrame"></iframe>
+    <div id="helpContent" class="help-modal-content">
+      <h2>Sample Trigger Player Guide</h2>
+      <p>A tool for loading, marking, and triggering audio samples in real-time.</p>
+
+      <h3>Getting Started</h3>
+      <ul>
+        <li>Click "Load Sample" to import a local audio file</li>
+        <li>Click "Browse Samples" to load remote samples</li>
+        <li>Press "Play" to start playback</li>
+        <li>Use the "Mark" button or spacebar to set trigger points</li>
+        <li>Click trigger pads or use the number keys 1-4 to play from marked points</li>
+        <li>Use the START pad or press 0 to retrigger from the beginning</li>
+      </ul>
+
+      <h3>Keyboard Shortcuts</h3>
+      <ul>
+        <li><kbd>Space</kbd> Mark current position</li>
+        <li><kbd>0</kbd> Retrigger from beginning (START pad)</li>
+        <li><kbd>1</kbd> - <kbd>4</kbd> Trigger respective sample points</li>
+        <li><kbd>Q W E R A S D F</kbd> Trigger Dub Effects</li>
+      </ul>
+
+      <h3>Visual Indicators</h3>
+      <ul>
+        <li>Orange playhead shows current position</li>
+        <li>Red markers show trigger points on the waveform</li>
+        <li>Green shaded area shows played portion</li>
+        <li>Red lit pads indicate marked positions with timestamps</li>
+        <li>VU Meters display real-time stereo audio levels (L/R channels)</li>
+      </ul>
+    </div>
   </div>
 
   <div class="container">
