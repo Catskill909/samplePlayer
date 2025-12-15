@@ -64,16 +64,19 @@
       background: rgba(0, 0, 0, 0.8);
       display: none;
       z-index: 1000;
+      overflow: hidden;
     }
 
     .help-overlay.active {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .close-help {
-      position: fixed;
-      top: calc(5vh + 20px);
-      right: calc(5vw + 20px);
+      position: sticky;
+      top: 15px;
+      left: calc(100% - 55px);
       background: linear-gradient(145deg, #3a3a3a 0%, #252525 100%);
       border: 1px solid #444;
       width: 40px;
@@ -84,8 +87,10 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
-      z-index: 1002;
+      z-index: 10000;
       transition: all 0.15s ease;
+      float: right;
+      margin-bottom: -40px;
     }
 
     .close-help:hover {
@@ -106,17 +111,18 @@
     }
 
     #helpContent {
+      position: relative;
       width: 80vw;
       max-width: 700px;
-      max-height: 80vh;
+      height: 80vh;
       background: #1a1a1a;
       color: #fff;
-      margin: 5vh auto;
       padding: 30px 40px;
-      display: block;
+      padding-bottom: 60px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       border-radius: 8px;
       overflow-y: auto;
+      overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
@@ -191,10 +197,10 @@
 
   <!-- Help Overlay -->
   <div class="help-overlay" id="helpOverlay">
-    <button class="close-help" id="closeHelp" aria-label="Close Help">
-      <i class="fas fa-times"></i>
-    </button>
     <div id="helpContent" class="help-modal-content">
+      <button class="close-help" id="closeHelp" aria-label="Close Help">
+        <i class="fas fa-times"></i>
+      </button>
       <h2>Sample Trigger Player Guide</h2>
       <p>A tool for loading, marking, and triggering audio samples in real-time.</p>
 
@@ -205,7 +211,7 @@
         <li>Press "Play" to start playback</li>
         <li>Use the "Mark" button or spacebar to set trigger points</li>
         <li>Click trigger pads or use the number keys 1-4 to play from marked points</li>
-        <li>Use the START pad or press 0 to retrigger from the beginning</li>
+        <li>Use the <strong>START</strong> pad or press <kbd>0</kbd> to retrigger from the beginning</li>
       </ul>
 
       <h3>Keyboard Shortcuts</h3>
@@ -222,7 +228,101 @@
         <li>Red markers show trigger points on the waveform</li>
         <li>Green shaded area shows played portion</li>
         <li>Red lit pads indicate marked positions with timestamps</li>
-        <li>VU Meters display real-time stereo audio levels (L/R channels)</li>
+        <li><strong>VU Meters</strong> display real-time stereo audio levels (L/R channels)</li>
+        <li>Countdown timer shows remaining playback time</li>
+      </ul>
+
+      <h3>Selection Tool</h3>
+      <ul>
+        <li>Hover over the waveform to see the selection hint</li>
+        <li>Click and drag on the waveform to select a region</li>
+        <li>Drag the left/right handles to adjust selection boundaries</li>
+        <li>Click "Play Selection" button to play only the selected portion</li>
+        <li>Click "Loop" button to continuously loop the selected region</li>
+        <li>Loop button glows green when active</li>
+        <li>Use "Clear" button to remove the selection</li>
+        <li>Make a new selection by clicking and dragging again</li>
+      </ul>
+
+      <h3>Working with Triggers</h3>
+      <ul>
+        <li>Each pad can store one trigger point</li>
+        <li>Markers are set automatically to next available pad</li>
+        <li>Time stamps show exact trigger positions</li>
+        <li>Click any marked pad to start from that position</li>
+        <li><strong>Drag red lines</strong> to fine-tune trigger positions</li>
+      </ul>
+
+      <h3>Trigger Point Storage</h3>
+      <ul>
+        <li>Trigger points are automatically saved in your browser</li>
+        <li>Points persist across browser sessions and internet connections</li>
+        <li>Each sample's trigger points are saved separately</li>
+        <li>Storage is specific to the browser you're using</li>
+      </ul>
+      <div class="note">
+        <strong>Note:</strong> Trigger points will be lost when:
+        <ul>
+          <li>Using a different browser</li>
+          <li>Clearing browser data/cache</li>
+          <li>Using private/incognito mode</li>
+          <li>Switching to a different device</li>
+        </ul>
+      </div>
+
+      <h3>Effects and Controls</h3>
+      <p>Each effect pad in the Dub Effects panel can add unique audio effects to your sample playback. To use an
+        effect:</p>
+      <ul>
+        <li>Click or press down on a pad to activate the effect</li>
+        <li>Release the pad to deactivate the effect</li>
+        <li>Each effect has visual feedback to indicate activation</li>
+      </ul>
+
+      <h3>Pitch / Speed Control</h3>
+      <p>Use the PITCH tab in the effects bank to control playback speed:</p>
+      <ul>
+        <li><strong>Speed Fader</strong>: Drag left for slower (0.5×) or right for faster (2.0×)</li>
+        <li>Fader is centered at <strong>1.0× (normal speed)</strong></li>
+        <li>Speed changes affect both pitch and tempo together (like vinyl)</li>
+        <li>Adjust speed in real-time while audio is playing</li>
+        <li>Click <strong>Reset</strong> to return to normal speed instantly</li>
+        <li>Trigger points work correctly at any speed setting</li>
+      </ul>
+      <div class="note">
+        <strong>Tip:</strong> Slowing down samples can reveal hidden details and create deeper, heavier sounds - a
+        classic dub technique!
+      </div>
+
+      <h3>Master Volume</h3>
+      <p>Use the MASTER tab to control the output volume:</p>
+      <ul>
+        <li><strong>Volume Fader</strong>: Drag to adjust output level from 0% to 100%</li>
+        <li>Green glow indicates current volume level</li>
+        <li>Adjust volume in real-time while audio is playing</li>
+        <li>Click <strong>Reset</strong> to return to full volume instantly</li>
+        <li>Volume changes are smooth with no clicks or pops</li>
+      </ul>
+
+      <h3>Available Effects</h3>
+      <ul>
+        <li><strong>Echo 1, Echo 2, Echo 3</strong>: Three variations of delay effects, each with increasing delay time
+          and depth, creating layered echo effects.</li>
+        <li><strong>Space</strong>: A reverb effect that adds a spacious, ambient sound to the audio.</li>
+        <li><strong>Tubby</strong>: A special delay effect with frequency sweeps and resonance, creating a classic dub
+          sound.</li>
+        <li><strong>Drop</strong>: Emulates tape dropout, introducing a slightly distorted, vintage sound.</li>
+        <li><strong>Spring</strong>: A resonant reverb effect with a bouncy, spring-like quality.</li>
+        <li><strong>Ghost</strong>: Adds a subtle pitch modulation to create a haunting echo effect.</li>
+      </ul>
+      <p>Experiment with different effects and combinations to add depth and style to your playback experience!</p>
+
+      <h3>Best Practices</h3>
+      <ul>
+        <li>Set trigger points during first playback for consistent timing</li>
+        <li>Use the waveform display to identify key sample sections</li>
+        <li>Clear all triggers if you want to start fresh</li>
+        <li>Check trigger point timing before live performance</li>
       </ul>
     </div>
   </div>
