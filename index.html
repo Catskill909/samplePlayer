@@ -451,20 +451,23 @@
       const volumeGlow = document.getElementById('volumeGlow');
       const volumeResetBtn = document.getElementById('volumeResetBtn');
 
-      // Initialize master volume
-      player.masterVolume = 1.0;
+      // Initialize master volume on window.player directly
+      window.player.masterVolume = 1.0;
 
       function updateVolumeDisplay(volume) {
         const percent = Math.round(volume * 100);
         volumeValue.textContent = percent + '%';
         volumeGlow.style.width = `calc(${percent}% - 8px)`;
 
-        // Store master volume
-        player.masterVolume = volume;
+        // Store master volume on window.player directly
+        window.player.masterVolume = volume;
 
-        // Apply to gain node if exists
-        if (player.gainNode && player.audioContext) {
-          player.gainNode.gain.setValueAtTime(volume, player.audioContext.currentTime);
+        // Apply to gain node if exists and playing
+        if (window.player.gainNode && window.player.audioContext) {
+          const now = window.player.audioContext.currentTime;
+          // Cancel any scheduled automation (like fade-in ramp) before setting new value
+          window.player.gainNode.gain.cancelScheduledValues(now);
+          window.player.gainNode.gain.setValueAtTime(volume, now);
         }
       }
 

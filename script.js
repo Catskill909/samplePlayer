@@ -828,12 +828,14 @@ class SamplePlayer {
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
 
-        // Create gain node for smooth fade-in/fade-out (prevents click)
+        // Create gain node for volume control and smooth fade-in/fade-out
         this.gainNode = this.audioContext.createGain();
-        // Start at 0 for fade-in
-        this.gainNode.gain.setValueAtTime(0, exactStartTime);
-        // Fade in over 10ms to master volume level (prevents click at start)
+
+        // Get target volume (default to 1.0 if not set)
         const targetVolume = this.masterVolume !== undefined ? this.masterVolume : 1.0;
+
+        // Start at 0 and fade in to target volume over 10ms (prevents click at start)
+        this.gainNode.gain.setValueAtTime(0, exactStartTime);
         this.gainNode.gain.linearRampToValueAtTime(targetVolume, exactStartTime + 0.010);
 
         // Create analyser nodes for VU meter
