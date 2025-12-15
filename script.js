@@ -899,7 +899,7 @@ class SamplePlayer {
         const analyserL = this.analyserNodeL;
         const analyserR = this.analyserNodeR;
         const splitter = this.splitterNode;
-        
+
         setTimeout(() => {
             sourceNode?.disconnect();
             gainNode?.disconnect();
