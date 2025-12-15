@@ -36,6 +36,12 @@ A web-based audio sample player designed for real-time performance and sound man
 - **Reset Button**: Instantly snap back to normal speed.
 - **Works with Triggers**: Trigger points play at the current speed setting.
 
+### 🔊 Master Volume
+- **Volume Fader**: Smooth 0-100% master output control.
+- **Real-time Adjustment**: Change volume while playing without clicks or pops.
+- **Green LED Glow**: Visual feedback shows current volume level.
+- **Reset Button**: Instantly return to full volume.
+
 ## Getting Started
 
 1.  **Open the App**:

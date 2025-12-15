@@ -311,7 +311,8 @@
           <div class="fader-container-horizontal">
             <span class="fader-min"><i class="fas fa-volume-off"></i></span>
             <div class="fader-track-horizontal">
-              <input type="range" id="volumeFader" class="speed-fader-horizontal volume-fader" min="0" max="100" step="1" value="100">
+              <input type="range" id="volumeFader" class="speed-fader-horizontal volume-fader" min="0" max="100"
+                step="1" value="100">
               <div class="fader-glow-horizontal volume-glow" id="volumeGlow"></div>
             </div>
             <span class="fader-max"><i class="fas fa-volume-up"></i></span>
@@ -457,10 +458,10 @@
         const percent = Math.round(volume * 100);
         volumeValue.textContent = percent + '%';
         volumeGlow.style.width = `calc(${percent}% - 8px)`;
-        
+
         // Store master volume
         player.masterVolume = volume;
-        
+
         // Apply to gain node if exists
         if (player.gainNode && player.audioContext) {
           player.gainNode.gain.setValueAtTime(volume, player.audioContext.currentTime);

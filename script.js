@@ -39,7 +39,7 @@ class SamplePlayer {
 
         // Playback speed state
         this.playbackSpeed = 1.0;
-        
+
         // Master volume state
         this.masterVolume = 1.0;
 

@@ -18,6 +18,7 @@ This document outlines potential features, improvements, and technical debt to a
 - [x] **Effects Bank Tabs**: DUB FX, PITCH, MASTER tabs for organized effects
 - [x] **Pitch/Speed Control**: Fader from 0.5× to 2.0× with centered 1.0× and reset button
 - [x] **Speed-Aware Triggers**: Trigger points work correctly at any playback speed
+- [x] **Master Volume Control**: 0-100% volume fader with green LED glow and reset button
 
 ---
 
