@@ -89,7 +89,7 @@ class DubEffects {
 
     createTubbyEffect(settings) {
         const chain = this.createEffectChain(settings);
-        
+
         // Create bandpass filter for frequency sweep
         const resonantFilter = this.context.createBiquadFilter();
         resonantFilter.type = 'bandpass';
@@ -109,7 +109,7 @@ class DubEffects {
         // Delay path: source -> delay -> resonantFilter -> resonantFilter2 -> filter -> feedback -> delay
         // Also: delay -> wet (direct path for original signal)
         chain.delay.disconnect();
-        
+
         // Main effect path
         chain.delay.connect(resonantFilter);
         resonantFilter.connect(resonantFilter2);
@@ -117,7 +117,7 @@ class DubEffects {
         filterGain.connect(chain.filter);
         chain.filter.connect(chain.feedback);
         chain.feedback.connect(chain.delay);
-        
+
         // Direct delay to wet for blending
         chain.delay.connect(chain.wet);
 
@@ -134,15 +134,15 @@ class DubEffects {
             filterFreq: 2200,
             name: 'tubbySwell'
         };
-        
+
         chain.delay.delayTime.value = chain.settings.delayTime;
-        
+
         return chain;
     }
 
     createDropoutEffect(settings) {
         const chain = this.createEffectChain(settings);
-        
+
         const tapeFilter = this.context.createBiquadFilter();
         tapeFilter.type = 'highshelf';
         tapeFilter.frequency.value = 7000;
@@ -163,17 +163,17 @@ class DubEffects {
         chain.filter.connect(chain.feedback);
         chain.feedback.connect(chain.delay);
         chain.delay.connect(chain.wet);
-        
+
         chain.tapeFilter = tapeFilter;
         chain.waveshaper = waveshaper;
         chain.type = 'dropout';
-        
+
         return chain;
     }
 
     createSpringEffect(settings) {
         const chain = this.createEffectChain(settings);
-        
+
         const allpass1 = this.context.createBiquadFilter();
         const allpass2 = this.context.createBiquadFilter();
         allpass1.type = allpass2.type = 'allpass';
@@ -188,17 +188,17 @@ class DubEffects {
         chain.filter.connect(chain.feedback);
         chain.feedback.connect(chain.delay);
         chain.delay.connect(chain.wet);
-        
+
         chain.allpass1 = allpass1;
         chain.allpass2 = allpass2;
         chain.type = 'spring';
-        
+
         return chain;
     }
 
     createGhostEffect(settings) {
         const chain = this.createEffectChain(settings);
-        
+
         const pitchDelay = this.context.createDelay(0.1);
         pitchDelay.delayTime.value = 0.03;
 
@@ -216,12 +216,12 @@ class DubEffects {
         chain.filter.connect(chain.feedback);
         chain.feedback.connect(chain.delay);
         chain.delay.connect(chain.wet);
-        
+
         chain.pitchDelay = pitchDelay;
         chain.lfo = lfo;
         chain.lfoGain = lfoGain;
         chain.type = 'ghost';
-        
+
         return chain;
     }
 
@@ -241,8 +241,8 @@ class DubEffects {
         if (active) {
             effect.feedback.gain.cancelScheduledValues(currentTime);
             effect.wet.gain.cancelScheduledValues(currentTime);
-            
-            switch(effect.type) {
+
+            switch (effect.type) {
                 case 'tubby':
                     effect.resonantFilter.frequency.setValueAtTime(400, currentTime);
                     effect.resonantFilter.frequency.exponentialRampToValueAtTime(2400, currentTime + 0.8);
@@ -252,25 +252,25 @@ class DubEffects {
                     effect.feedback.gain.setTargetAtTime(0.89, currentTime, 0.05);
                     effect.wet.gain.setTargetAtTime(0.8, currentTime, 0.1);
                     break;
-                    
+
                 case 'dropout':
                     effect.tapeFilter.frequency.setValueAtTime(7000, currentTime);
                     effect.tapeFilter.frequency.exponentialRampToValueAtTime(4000, currentTime + 0.2);
                     effect.feedback.gain.setTargetAtTime(effect.settings.feedbackGain, currentTime, 0.01);
                     effect.wet.gain.setTargetAtTime(0.75, currentTime, 0.01);
                     break;
-                    
+
                 case 'spring':
                     effect.feedback.gain.setTargetAtTime(effect.settings.feedbackGain, currentTime, 0.005);
                     effect.wet.gain.setTargetAtTime(0.65, currentTime, 0.005);
                     break;
-                    
+
                 case 'ghost':
                     effect.feedback.gain.setTargetAtTime(effect.settings.feedbackGain, currentTime, 0.1);
                     effect.wet.gain.setTargetAtTime(0.7, currentTime, 0.2);
                     effect.lfoGain.gain.setTargetAtTime(0.002, currentTime, 0.1);
                     break;
-                    
+
                 default:
                     effect.feedback.gain.setTargetAtTime(effect.settings.feedbackGain, currentTime, 0.01);
                     effect.wet.gain.setTargetAtTime(0.7, currentTime, 0.01);
@@ -278,8 +278,8 @@ class DubEffects {
         } else {
             effect.feedback.gain.cancelScheduledValues(currentTime);
             effect.wet.gain.cancelScheduledValues(currentTime);
-            
-            switch(effect.type) {
+
+            switch (effect.type) {
                 case 'tubby':
                     effect.resonantFilter.frequency.exponentialRampToValueAtTime(200, currentTime + 2.0);
                     effect.resonantFilter2.frequency.exponentialRampToValueAtTime(400, currentTime + 1.5);
@@ -290,24 +290,24 @@ class DubEffects {
                     effect.wet.gain.setTargetAtTime(0.6, currentTime, 0.5);
                     effect.wet.gain.setTargetAtTime(0, currentTime + 2.0, 1.5);
                     break;
-                    
+
                 case 'dropout':
                     effect.tapeFilter.frequency.exponentialRampToValueAtTime(2000, currentTime + 0.5);
                     effect.feedback.gain.setTargetAtTime(0, currentTime, 1.0);
                     effect.wet.gain.setTargetAtTime(0, currentTime, 1.5);
                     break;
-                    
+
                 case 'spring':
                     effect.feedback.gain.setTargetAtTime(0, currentTime, 0.5);
                     effect.wet.gain.setTargetAtTime(0, currentTime, 1.0);
                     break;
-                    
+
                 case 'ghost':
                     effect.lfoGain.gain.setTargetAtTime(0, currentTime, 0.5);
                     effect.feedback.gain.setTargetAtTime(0, currentTime, 2.0);
                     effect.wet.gain.setTargetAtTime(0, currentTime, 2.5);
                     break;
-                    
+
                 default:
                     if (effectName === 'reverb') {
                         effect.feedback.gain.setTargetAtTime(0, currentTime, 0.2);
@@ -326,15 +326,15 @@ class DubEffects {
     cleanup() {
         Object.values(this.effects).forEach(effect => {
             if (effect.lfo) effect.lfo.stop();
-            
+
             effect.feedback.gain.value = 0;
             effect.wet.gain.value = 0;
-            
+
             effect.delay.disconnect();
             effect.feedback.disconnect();
             effect.filter.disconnect();
             effect.wet.disconnect();
-            
+
             if (effect.resonantFilter) effect.resonantFilter.disconnect();
             if (effect.resonantFilter2) effect.resonantFilter2.disconnect();
             if (effect.filterGain) effect.filterGain.disconnect();
@@ -347,3 +347,6 @@ class DubEffects {
         });
     }
 }
+
+// ES Module export
+export default DubEffects;

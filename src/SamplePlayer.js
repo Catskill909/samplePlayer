@@ -1,3 +1,6 @@
+// ES Module imports
+import DubEffects from './DubEffects.js';
+
 class SamplePlayer {
     constructor() {
         this.audioContext = null;
@@ -1104,123 +1107,67 @@ class SamplePlayer {
         }
     }
 }
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    // Create global player instance so it can be accessed from other scripts
-    window.player = new SamplePlayer();
-    const player = window.player;
 
-    const browseSamples = document.getElementById('browseSamples');
-    const sampleBrowser = document.getElementById('sampleBrowserOverlay');
-    const closeBrowser = document.getElementById('closeSampleBrowser');
-    const sampleList = document.getElementById('sampleList');
+// Export the class
+export default SamplePlayer;
 
-    browseSamples?.addEventListener('click', () => {
-        sampleBrowser.classList.add('active');
-    });
-
-    closeBrowser?.addEventListener('click', () => {
-        sampleBrowser.classList.remove('active');
-    });
-
-    sampleBrowser?.addEventListener('click', (e) => {
-        if (e.target === sampleBrowser) {
-            sampleBrowser.classList.remove('active');
-        }
-    });
-
-    const tabs = document.querySelectorAll('.tab-button');
-    let currentSamples = [];
-
-    const samples = {
-        oss: [
-            { name: 'AndNow', url: './audio/AndNow.mp3' },
-            { name: 'Old Skool Baby 1', url: './audio/OldSkoolBsby1.mp3' },
-            { name: 'CharlieOSS', url: './audio/CharlieOSS.mp3' },
-            { name: 'Old Skool Baby 2', url: './audio/OldSkoolBsby2.mp3' },
-            { name: 'DJ Chucks ID WJFF', url: './audio/DJChucksIDWJFF.mp3' },
-            { name: 'DJ Chucks Long Old ID', url: './audio/DJChucksLegalIDWJFF.mp3' },
-            { name: 'Feature Presentation', url: './audio/FeaturePresentation.mp3' },
-            { name: 'ForMyNextNumber', url: './audio/ForMyNextNumber.mp3' },
-            { name: 'More Power Chucks', url: './audio/MorePowerChucks.mp3' },
-            { name: 'More Power Paul', url: './audio/MorePowerPaul.mp3' },
-            { name: 'MorePowerCharlie', url: './audio/MorePowerCharlie.mp3' },
-            { name: 'OhMyGoshEcho', url: './audio/OhMyGoshECHO.mp3' },
-            { name: 'Disclaimer', url: './audio/Disclaimer.mp3' },
-            { name: 'OhNoMyBrother-BuyYourOwn', url: './audio/OhNoMyBrother-BuyYourOwn.mp3' },
-            { name: 'BarkyStarkey', url: './audio/BarkyStarkey.mp3' },
-            { name: 'StarTrekSTRESS', url: './audio/StarTrekSTRESS.mp3' },
-            { name: 'SuperBad', url: './audio/SuperBad.mp3' },
-            { name: 'WhatchThis', url: './audio/WhatchThis.mp3' },
-            { name: 'YouFeelLikeDancing', url: './audio/YouFeelLikeDancing.mp3' },
-            { name: 'YourMammy', url: './audio/YourMammy.mp3' },
-            { name: 'BossDJ2', url: './audio/BossDJ2.mp3' },
-            { name: 'andNOW2', url: './audio/andNOW2.wav' },
-            { name: 'classics2', url: './audio/classics2.wav' },
-            { name: 'GoBackWayBack', url: './audio/GoBackWayBack.wav' },
-        ],
-        reggae: [
-            { name: 'BedroomMazurka', url: './audio/BedroomMazurka.mp3' },
-            { name: 'CallTheDJ', url: './audio/CallTheDJ.mp3' },
-            { name: 'Darling', url: './audio/Darling.mp3' },
-            { name: 'Darling2', url: './audio/Darling2.mp3' },
-            { name: 'GoSakka', url: './audio/GoSakka.mp3' },
-            { name: 'Heavy Skit', url: './audio/Heavy.mp3' },
-            { name: 'Heavy2', url: './audio/Heavy2.mp3' },
-            { name: 'I tell the DJ', url: './audio/I_tell_the_DJ.mp3' },
-            { name: 'I Say Old Chap', url: './audio/I_Say_Old_Chap.mp3' },
-            { name: 'KarateLion', url: './audio/KarateLion.mp3' },
-            { name: 'KnockKnock', url: './audio/KnockKnock.mp3' },
-            { name: 'Leave the Studio', url: './audio/Leave_the_Studio.mp3' },
-            { name: 'ThisIsRockers', url: './audio/ThisIsRockers.mp3' },
-            { name: 'StrictlyRockers2', url: './audio/StrictlyRockers2.mp3' },
-            { name: 'Move Ya', url: './audio/MoveYa.mp3' },
-            { name: 'Musical Attack', url: './audio/MusicalAttack.mp3' },
-            { name: 'MusicMachine', url: './audio/MusicMachine.mp3' },
-            { name: 'Na True', url: './audio/NaTrue.mp3' },
-            { name: 'StrictlyHardMusic', url: './audio/StrictlyHardMusic.mp3' },
-            { name: 'StrictlyRubaDub1', url: './audio/StrictlyRubaDub1.mp3' },
-            { name: 'StrictlyRubaDub2', url: './audio/StrictlyRubaDub2.mp3' },
-            { name: 'StrictlyRockers', url: './audio/StrictlyRockers.mp3' },
-            { name: 'StrongStrongSTrong', url: './audio/StrongStrongSTrong.mp3' },
-            { name: 'WhatUpWhatUp', url: './audio/WhatUpWhatUp.mp3' },
-        ],
-        sirens: [
-            { name: 'Bomba', url: './audio/Bomba.mp3' },
-            { name: 'Horn', url: './audio/Horn.mp3' },
-            { name: 'Pyong Pyong 1', url: './audio/PyongPyong1.mp3' },
-        ]
-    };
-
-    window.samples = samples;
-
-    function updateSampleList(category) {
-        currentSamples = samples[category];
-        sampleList.innerHTML = '';
-
-        currentSamples.forEach(sample => {
-            const item = document.createElement('div');
-            item.className = 'sample-item';
-            item.innerHTML = `<i class="fas fa-music"></i><span>${sample.name}</span>`;
-
-            item.addEventListener('click', () => {
-                player.loadSampleFromUrl(sample.url);
-                sampleBrowser.classList.remove('active');
-            });
-
-            sampleList.appendChild(item);
-        });
-    }
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            updateSampleList(tab.dataset.tab);
-        });
-    });
-
-    if (tabs.length > 0) {
-        updateSampleList('oss');
-    }
-});
+// Sample library data
+export const samples = {
+    oss: [
+        { name: 'AndNow', url: './audio/AndNow.mp3' },
+        { name: 'Old Skool Baby 1', url: './audio/OldSkoolBsby1.mp3' },
+        { name: 'CharlieOSS', url: './audio/CharlieOSS.mp3' },
+        { name: 'Old Skool Baby 2', url: './audio/OldSkoolBsby2.mp3' },
+        { name: 'DJ Chucks ID WJFF', url: './audio/DJChucksIDWJFF.mp3' },
+        { name: 'DJ Chucks Long Old ID', url: './audio/DJChucksLegalIDWJFF.mp3' },
+        { name: 'Feature Presentation', url: './audio/FeaturePresentation.mp3' },
+        { name: 'ForMyNextNumber', url: './audio/ForMyNextNumber.mp3' },
+        { name: 'More Power Chucks', url: './audio/MorePowerChucks.mp3' },
+        { name: 'More Power Paul', url: './audio/MorePowerPaul.mp3' },
+        { name: 'MorePowerCharlie', url: './audio/MorePowerCharlie.mp3' },
+        { name: 'OhMyGoshEcho', url: './audio/OhMyGoshECHO.mp3' },
+        { name: 'Disclaimer', url: './audio/Disclaimer.mp3' },
+        { name: 'OhNoMyBrother-BuyYourOwn', url: './audio/OhNoMyBrother-BuyYourOwn.mp3' },
+        { name: 'BarkyStarkey', url: './audio/BarkyStarkey.mp3' },
+        { name: 'StarTrekSTRESS', url: './audio/StarTrekSTRESS.mp3' },
+        { name: 'SuperBad', url: './audio/SuperBad.mp3' },
+        { name: 'WhatchThis', url: './audio/WhatchThis.mp3' },
+        { name: 'YouFeelLikeDancing', url: './audio/YouFeelLikeDancing.mp3' },
+        { name: 'YourMammy', url: './audio/YourMammy.mp3' },
+        { name: 'BossDJ2', url: './audio/BossDJ2.mp3' },
+        { name: 'andNOW2', url: './audio/andNOW2.wav' },
+        { name: 'classics2', url: './audio/classics2.wav' },
+        { name: 'GoBackWayBack', url: './audio/GoBackWayBack.wav' },
+    ],
+    reggae: [
+        { name: 'BedroomMazurka', url: './audio/BedroomMazurka.mp3' },
+        { name: 'CallTheDJ', url: './audio/CallTheDJ.mp3' },
+        { name: 'Darling', url: './audio/Darling.mp3' },
+        { name: 'Darling2', url: './audio/Darling2.mp3' },
+        { name: 'GoSakka', url: './audio/GoSakka.mp3' },
+        { name: 'Heavy Skit', url: './audio/Heavy.mp3' },
+        { name: 'Heavy2', url: './audio/Heavy2.mp3' },
+        { name: 'I tell the DJ', url: './audio/I_tell_the_DJ.mp3' },
+        { name: 'I Say Old Chap', url: './audio/I_Say_Old_Chap.mp3' },
+        { name: 'KarateLion', url: './audio/KarateLion.mp3' },
+        { name: 'KnockKnock', url: './audio/KnockKnock.mp3' },
+        { name: 'Leave the Studio', url: './audio/Leave_the_Studio.mp3' },
+        { name: 'ThisIsRockers', url: './audio/ThisIsRockers.mp3' },
+        { name: 'StrictlyRockers2', url: './audio/StrictlyRockers2.mp3' },
+        { name: 'Move Ya', url: './audio/MoveYa.mp3' },
+        { name: 'Musical Attack', url: './audio/MusicalAttack.mp3' },
+        { name: 'MusicMachine', url: './audio/MusicMachine.mp3' },
+        { name: 'Na True', url: './audio/NaTrue.mp3' },
+        { name: 'StrictlyHardMusic', url: './audio/StrictlyHardMusic.mp3' },
+        { name: 'StrictlyRubaDub1', url: './audio/StrictlyRubaDub1.mp3' },
+        { name: 'StrictlyRubaDub2', url: './audio/StrictlyRubaDub2.mp3' },
+        { name: 'StrictlyRockers', url: './audio/StrictlyRockers.mp3' },
+        { name: 'StrongStrongSTrong', url: './audio/StrongStrongSTrong.mp3' },
+        { name: 'WhatUpWhatUp', url: './audio/WhatUpWhatUp.mp3' },
+    ],
+    sirens: [
+        { name: 'Bomba', url: './audio/Bomba.mp3' },
+        { name: 'Horn', url: './audio/Horn.mp3' },
+        { name: 'Pyong Pyong 1', url: './audio/PyongPyong1.mp3' },
+    ]
+};

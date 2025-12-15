@@ -1,0 +1,26 @@
+{
+  "name": "oss-sample-player",
+  "version": "2.0.0",
+  "description": "A web-based audio sample player designed for real-time performance and sound manipulation. Load samples, set trigger points, and apply dub-style effects on the fly.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "audio",
+    "sampler",
+    "dub",
+    "effects",
+    "web-audio"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "serve": "^14.2.5"
+  }
+}
