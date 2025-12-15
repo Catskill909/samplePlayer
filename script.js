@@ -39,6 +39,9 @@ class SamplePlayer {
 
         // Playback speed state
         this.playbackSpeed = 1.0;
+        
+        // Master volume state
+        this.masterVolume = 1.0;
 
         this.elements = {
             audioInput: document.getElementById('audioInput'),
@@ -829,8 +832,9 @@ class SamplePlayer {
         this.gainNode = this.audioContext.createGain();
         // Start at 0 for fade-in
         this.gainNode.gain.setValueAtTime(0, exactStartTime);
-        // Fade in over 10ms to prevent click at start
-        this.gainNode.gain.linearRampToValueAtTime(1, exactStartTime + 0.010);
+        // Fade in over 10ms to master volume level (prevents click at start)
+        const targetVolume = this.masterVolume !== undefined ? this.masterVolume : 1.0;
+        this.gainNode.gain.linearRampToValueAtTime(targetVolume, exactStartTime + 0.010);
 
         // Create analyser nodes for VU meter
         this.analyserNodeL = this.audioContext.createAnalyser();

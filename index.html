@@ -302,13 +302,29 @@
       </div>
     </div>
 
-    <!-- MASTER Panel (coming soon) -->
+    <!-- MASTER Panel -->
     <div class="effects-panel" id="panel-master">
-      <div class="coming-soon-panel">
-        <i class="fas fa-sliders-h coming-soon-icon"></i>
-        <h3>Master Effects</h3>
-        <p>Compressor, limiter, EQ, and master volume</p>
-        <span class="coming-soon-badge">Coming Soon</span>
+      <div class="pitch-control-panel-simple">
+        <!-- Volume Fader Section -->
+        <div class="pitch-fader-section-centered">
+          <div class="fader-label">VOLUME</div>
+          <div class="fader-container-horizontal">
+            <span class="fader-min"><i class="fas fa-volume-off"></i></span>
+            <div class="fader-track-horizontal">
+              <input type="range" id="volumeFader" class="speed-fader-horizontal volume-fader" min="0" max="100" step="1" value="100">
+              <div class="fader-glow-horizontal volume-glow" id="volumeGlow"></div>
+            </div>
+            <span class="fader-max"><i class="fas fa-volume-up"></i></span>
+            <div class="fader-value" id="volumeValue">100%</div>
+          </div>
+          <button class="pitch-reset-btn-inline" id="volumeResetBtn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+          <div class="pitch-info-inline">
+            <i class="fas fa-info-circle"></i>
+            Master output volume control
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -425,6 +441,48 @@
 
       // Initialize
       player.playbackSpeed = 1.0;
+
+      // ==========================================
+      // MASTER VOLUME CONTROL
+      // ==========================================
+      const volumeFader = document.getElementById('volumeFader');
+      const volumeValue = document.getElementById('volumeValue');
+      const volumeGlow = document.getElementById('volumeGlow');
+      const volumeResetBtn = document.getElementById('volumeResetBtn');
+
+      // Initialize master volume
+      player.masterVolume = 1.0;
+
+      function updateVolumeDisplay(volume) {
+        const percent = Math.round(volume * 100);
+        volumeValue.textContent = percent + '%';
+        volumeGlow.style.width = `calc(${percent}% - 8px)`;
+        
+        // Store master volume
+        player.masterVolume = volume;
+        
+        // Apply to gain node if exists
+        if (player.gainNode && player.audioContext) {
+          player.gainNode.gain.setValueAtTime(volume, player.audioContext.currentTime);
+        }
+      }
+
+      function updateVolume(volume) {
+        volumeFader.value = volume * 100;
+        updateVolumeDisplay(volume);
+      }
+
+      // Fader input
+      volumeFader.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value) / 100;
+        updateVolumeDisplay(volume);
+      });
+
+      // Reset button
+      volumeResetBtn.addEventListener('click', () => updateVolume(1.0));
+
+      // Initialize display
+      updateVolumeDisplay(1.0);
 
       // Help system
       const helpTrigger = document.getElementById("helpTrigger");
