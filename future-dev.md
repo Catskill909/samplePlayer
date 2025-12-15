@@ -99,6 +99,29 @@ With Vite, we can now use any npm package! Some ideas:
 
 ---
 
+## Progressive Web App (PWA) Support
+
+This app now supports PWA features, which are 100% optional and have zero effect on normal web or Coolify deployment. If you don’t use the PWA features, the app works as before.
+
+### What is a PWA?
+- A PWA (Progressive Web App) lets users “install” the app to their device, like a native app.
+- It works offline (for cached pages/assets) and opens in its own window, without browser chrome.
+- It gets an icon on the desktop or home screen, and always updates from your site.
+
+### How do users install it?
+- Visit the site in a modern browser (Chrome, Edge, Safari, etc.).
+- Look for an “Install” or “Add to Home Screen” prompt in the address bar or browser menu.
+  - On desktop: Click the install icon (monitor with down arrow) or use the browser menu.
+  - On mobile: Use the share menu, then tap “Add to Home Screen.”
+- After install, the app launches like a native app and can work offline.
+
+### Zero-Risk for Coolify Deploy
+- PWA support is opt-in for users and does not affect your app’s core functionality or deployment.
+- All PWA files are static and ignored if not used.
+- If you ever want to remove PWA, just delete the manifest and service worker—no impact on the rest of your deployment.
+
+---
+
 ## 💡 Creative Ideas (Brainstorm)
 
 ### Performance Features

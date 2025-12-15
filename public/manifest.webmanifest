@@ -1,0 +1,21 @@
+{
+  "name": "Sample Player",
+  "short_name": "SamplePlayer",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#4ade80",
+  "description": "A modern sample player with VU meter and waveform display.",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -4,6 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>OSS Sample Trigger Player</title>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#1a1a1a" />
+  <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
+  <link rel="apple-touch-icon" href="/icon-192.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet" />
@@ -117,6 +122,14 @@
 </head>
 
 <body>
+  <!-- Register Service Worker for PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }
+  </script>
   <!-- Help Button (floating) -->
   <button class="help-trigger" id="helpTrigger" aria-label="Show Help">
     <i class="fas fa-question"></i>

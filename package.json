@@ -18,7 +18,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vite": "^7.3.0"
+    "vite": "^7.3.0",
+    "vite-plugin-pwa": "^1.2.0",
+    "wavesurfer.js": "^7.12.1"
   },
   "dependencies": {
     "serve": "^14.2.5"
