@@ -878,22 +878,36 @@ class SamplePlayer {
     stopPlayback() {
         if (!this.isPlaying) return;
 
-        // Quick fade-out to prevent click
+        // Quick fade-out to prevent click (30ms for smoother fade)
+        const fadeTime = 0.030;
         if (this.gainNode && this.audioContext) {
             const now = this.audioContext.currentTime;
             this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-            this.gainNode.gain.linearRampToValueAtTime(0, now + 0.015);
+            this.gainNode.gain.linearRampToValueAtTime(0, now + fadeTime);
         }
 
-        // Stop immediately but the fade prevents the click
+        // Stop after fade completes
         try {
-            this.sourceNode?.stop(this.audioContext.currentTime + 0.015);
+            this.sourceNode?.stop(this.audioContext.currentTime + fadeTime);
         } catch (e) {
             // Ignore if already stopped
         }
 
-        this.sourceNode?.disconnect();
-        this.gainNode?.disconnect();
+        // Delay disconnect until after fade completes to prevent click
+        const sourceNode = this.sourceNode;
+        const gainNode = this.gainNode;
+        const analyserL = this.analyserNodeL;
+        const analyserR = this.analyserNodeR;
+        const splitter = this.splitterNode;
+        
+        setTimeout(() => {
+            sourceNode?.disconnect();
+            gainNode?.disconnect();
+            analyserL?.disconnect();
+            analyserR?.disconnect();
+            splitter?.disconnect();
+        }, fadeTime * 1000 + 10);
+
         this.sourceNode = null;
         this.gainNode = null;
 
@@ -913,10 +927,7 @@ class SamplePlayer {
         // Reset VU meters
         this.resetVUMeters();
 
-        // Disconnect analyser nodes
-        this.analyserNodeL?.disconnect();
-        this.analyserNodeR?.disconnect();
-        this.splitterNode?.disconnect();
+        // Clear analyser references (actual disconnect happens after fade)
         this.analyserNodeL = null;
         this.analyserNodeR = null;
         this.splitterNode = null;
