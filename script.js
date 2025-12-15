@@ -37,6 +37,9 @@ class SamplePlayer {
         this.loopingSelection = false; // Track if looping selection
         this.draggingHandle = null; // Track which selection handle is being dragged ('left' or 'right')
 
+        // Playback speed state
+        this.playbackSpeed = 1.0;
+
         this.elements = {
             audioInput: document.getElementById('audioInput'),
             playButton: document.getElementById('playButton'),
@@ -639,7 +642,9 @@ class SamplePlayer {
     updatePlayhead() {
         if (!this.isPlaying) return;
 
-        const currentTime = this.audioContext.currentTime - this.startTime;
+        // Account for playback speed when calculating current time
+        const speed = this.playbackSpeed || 1.0;
+        const currentTime = (this.audioContext.currentTime - this.startTime) * speed;
         const progress = currentTime / this.audioBuffer.duration;
         const position = Math.floor(progress * this.elements.waveform.offsetWidth);
 
@@ -808,10 +813,14 @@ class SamplePlayer {
 
         await this.initializeAudioContext();
 
+        // Apply playback speed
+        const speed = this.playbackSpeed || 1.0;
+
         // Ensure precise timing
         const startDelay = 0.005; // 5ms scheduling delay for better precision
         const exactStartTime = this.audioContext.currentTime + startDelay;
-        this.startTime = exactStartTime - offset;
+        // Adjust startTime for playback speed so playhead position calculates correctly
+        this.startTime = exactStartTime - (offset / speed);
 
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
@@ -849,6 +858,9 @@ class SamplePlayer {
         const initialPosition = Math.floor((offset / this.audioBuffer.duration) * this.elements.waveform.offsetWidth);
         this.elements.playhead.style.left = `${initialPosition}px`;
         this.elements.progressOverlay.style.width = `${initialPosition}px`;
+
+        // Apply playback speed (speed variable declared earlier)
+        this.sourceNode.playbackRate.value = speed;
 
         this.sourceNode.start(exactStartTime, offset);
         this.isPlaying = true;
@@ -1077,7 +1089,9 @@ class SamplePlayer {
 }
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const player = new SamplePlayer();
+    // Create global player instance so it can be accessed from other scripts
+    window.player = new SamplePlayer();
+    const player = window.player;
 
     const browseSamples = document.getElementById('browseSamples');
     const sampleBrowser = document.getElementById('sampleBrowserOverlay');

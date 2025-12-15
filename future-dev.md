@@ -10,20 +10,38 @@ This document outlines potential features, improvements, and technical debt to a
 - [x] **Start Pad**: Dedicated pad to retrigger from 0:00 (keyboard: `0`)
 - [x] **Hardware UI Redesign**: Realistic MPC/sampler-inspired styling with brushed metal, LCD waveform, rubber pads
 - [x] **Smooth Fade-out**: Eliminated audio clicks at end of playback
+- [x] **Smooth Fade-in**: Eliminated audio clicks at start of playback
 - [x] **Enlarged Interface**: Bigger pads, waveform, and controls for better usability
 - [x] **Selection Hint**: Tooltip on waveform hover to guide users
 - [x] **Countdown Timer**: Shows remaining time instead of elapsed
+- [x] **Loop Selection**: Toggle to loop the selected region continuously
+- [x] **Effects Bank Tabs**: DUB FX, PITCH, MASTER tabs for organized effects
+
+---
+
+## 🚧 In Progress
+
+### Pitch Control Panel
+Speed control using Web Audio `playbackRate` (note: pitch and speed are linked)
+
+**Controls:**
+- [ ] **Speed Fader**: Vertical slider (0.5x to 2.0x playback rate)
+- [ ] **Half-Speed Button**: Quick preset to 0.5x
+- [ ] **Normal Button**: Reset to 1.0x  
+- [ ] **Double-Speed Button**: Quick preset to 2.0x
+
+**Technical Notes:**
+- Uses `sourceNode.playbackRate.value` 
+- Pitch and speed are inherently linked in Web Audio (slower = lower pitch)
+- True pitch-shifting (speed independent) requires complex DSP (future consideration)
 
 ---
 
 ## 🎯 High Priority Features
 
 ### Audio Engine
-- [x] **Loop Selection**: Toggle to loop the selected region continuously
 - [ ] **Chop Mode**: Auto-divide sample into equal segments (4, 8, 16 slices)
 - [ ] **BPM Detection**: Analyze sample tempo for synced loops
-- [ ] **Pitch/Speed Control**: Real-time pitch shifting without affecting tempo
-- [ ] **Reverse Playback**: Play sample or selection backwards
 - [ ] **Recording**: Capture performance output to downloadable WAV/MP3
 
 ### Selection Enhancements

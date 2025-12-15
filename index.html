@@ -216,46 +216,100 @@
     </div>
   </div>
 
-  <div class="dub-pads-container">
-    <div class="dub-pad" data-effect="delay1" data-key="q">
-      <span class="key-hint">Q</span>
-      <i class="dub-pad-icon">🌊</i>
-      <span class="dub-pad-label">Echo 1</span>
+  <!-- Effects Bank with Tabs -->
+  <div class="effects-bank">
+    <div class="effects-tabs">
+      <button class="effects-tab active" data-tab="dubfx">
+        <i class="fas fa-wave-square"></i> DUB FX
+      </button>
+      <button class="effects-tab" data-tab="pitch">
+        <i class="fas fa-tachometer-alt"></i> PITCH
+      </button>
+      <button class="effects-tab" data-tab="master">
+        <i class="fas fa-sliders-h"></i> MASTER
+      </button>
     </div>
-    <div class="dub-pad" data-effect="delay2" data-key="w">
-      <span class="key-hint">W</span>
-      <i class="dub-pad-icon">🌀</i>
-      <span class="dub-pad-label">Echo 2</span>
+
+    <!-- DUB FX Panel (current effects) -->
+    <div class="effects-panel active" id="panel-dubfx">
+      <div class="dub-pads-container">
+        <div class="dub-pad" data-effect="delay1" data-key="q">
+          <span class="key-hint">Q</span>
+          <i class="dub-pad-icon">🌊</i>
+          <span class="dub-pad-label">Echo 1</span>
+        </div>
+        <div class="dub-pad" data-effect="delay2" data-key="w">
+          <span class="key-hint">W</span>
+          <i class="dub-pad-icon">🌀</i>
+          <span class="dub-pad-label">Echo 2</span>
+        </div>
+        <div class="dub-pad" data-effect="delay3" data-key="e">
+          <span class="key-hint">E</span>
+          <i class="dub-pad-icon">💫</i>
+          <span class="dub-pad-label">Echo 3</span>
+        </div>
+        <div class="dub-pad" data-effect="reverb" data-key="r">
+          <span class="key-hint">R</span>
+          <i class="dub-pad-icon">✨</i>
+          <span class="dub-pad-label">Space</span>
+        </div>
+        <div class="dub-pad" data-effect="tubbySwell" data-key="a">
+          <span class="key-hint">A</span>
+          <i class="dub-pad-icon">🎛️</i>
+          <span class="dub-pad-label">Tubby</span>
+        </div>
+        <div class="dub-pad" data-effect="dropOut" data-key="s">
+          <span class="key-hint">S</span>
+          <i class="dub-pad-icon">📼</i>
+          <span class="dub-pad-label">Drop</span>
+        </div>
+        <div class="dub-pad" data-effect="springs" data-key="d">
+          <span class="key-hint">D</span>
+          <i class="dub-pad-icon">🌀</i>
+          <span class="dub-pad-label">Spring</span>
+        </div>
+        <div class="dub-pad" data-effect="ghostEcho" data-key="f">
+          <span class="key-hint">F</span>
+          <i class="dub-pad-icon">👻</i>
+          <span class="dub-pad-label">Ghost</span>
+        </div>
+      </div>
     </div>
-    <div class="dub-pad" data-effect="delay3" data-key="e">
-      <span class="key-hint">E</span>
-      <i class="dub-pad-icon">💫</i>
-      <span class="dub-pad-label">Echo 3</span>
+
+    <!-- PITCH Panel -->
+    <div class="effects-panel" id="panel-pitch">
+      <div class="pitch-control-panel-simple">
+        <!-- Speed Fader Section -->
+        <div class="pitch-fader-section-centered">
+          <div class="fader-label">SPEED</div>
+          <div class="fader-container-horizontal">
+            <span class="fader-min">0.5×</span>
+            <div class="fader-track-horizontal">
+              <input type="range" id="speedFader" class="speed-fader-horizontal" min="0" max="100" step="1" value="50">
+              <div class="fader-glow-horizontal" id="faderGlow"></div>
+            </div>
+            <span class="fader-max">2.0×</span>
+            <div class="fader-value" id="speedValue">1.00×</div>
+          </div>
+          <button class="pitch-reset-btn-inline" id="pitchResetBtn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+          <div class="pitch-info-inline">
+            <i class="fas fa-info-circle"></i>
+            Speed affects playback rate and pitch together
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="dub-pad" data-effect="reverb" data-key="r">
-      <span class="key-hint">R</span>
-      <i class="dub-pad-icon">✨</i>
-      <span class="dub-pad-label">Space</span>
-    </div>
-    <div class="dub-pad" data-effect="tubbySwell" data-key="a">
-      <span class="key-hint">A</span>
-      <i class="dub-pad-icon">🎛️</i>
-      <span class="dub-pad-label">Tubby</span>
-    </div>
-    <div class="dub-pad" data-effect="dropOut" data-key="s">
-      <span class="key-hint">S</span>
-      <i class="dub-pad-icon">📼</i>
-      <span class="dub-pad-label">Drop</span>
-    </div>
-    <div class="dub-pad" data-effect="springs" data-key="d">
-      <span class="key-hint">D</span>
-      <i class="dub-pad-icon">🌀</i>
-      <span class="dub-pad-label">Spring</span>
-    </div>
-    <div class="dub-pad" data-effect="ghostEcho" data-key="f">
-      <span class="key-hint">F</span>
-      <i class="dub-pad-icon">👻</i>
-      <span class="dub-pad-label">Ghost</span>
+
+    <!-- MASTER Panel (coming soon) -->
+    <div class="effects-panel" id="panel-master">
+      <div class="coming-soon-panel">
+        <i class="fas fa-sliders-h coming-soon-icon"></i>
+        <h3>Master Effects</h3>
+        <p>Compressor, limiter, EQ, and master volume</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
     </div>
   </div>
 
@@ -281,7 +335,96 @@
   <script src="script.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const player = new SamplePlayer();
+      // Use the global player created in script.js
+      const player = window.player;
+
+      // Effects bank tab switching
+      const effectsTabs = document.querySelectorAll('.effects-tab');
+      const effectsPanels = document.querySelectorAll('.effects-panel');
+
+      effectsTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetPanel = tab.dataset.tab;
+
+          // Update tabs
+          effectsTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          // Update panels
+          effectsPanels.forEach(panel => {
+            panel.classList.remove('active');
+            if (panel.id === `panel-${targetPanel}`) {
+              panel.classList.add('active');
+            }
+          });
+        });
+      });
+
+      // Pitch Control System
+      const speedFader = document.getElementById('speedFader');
+      const speedValue = document.getElementById('speedValue');
+      const faderGlow = document.getElementById('faderGlow');
+      const pitchResetBtn = document.getElementById('pitchResetBtn');
+
+      // Convert slider position (0-100) to speed (0.5-2.0) with 50 = 1.0
+      function sliderToSpeed(sliderVal) {
+        if (sliderVal <= 50) {
+          // 0-50 maps to 0.5-1.0
+          return 0.5 + (sliderVal / 50) * 0.5;
+        } else {
+          // 50-100 maps to 1.0-2.0
+          return 1.0 + ((sliderVal - 50) / 50) * 1.0;
+        }
+      }
+
+      // Convert speed (0.5-2.0) to slider position (0-100) with 1.0 = 50
+      function speedToSlider(speed) {
+        if (speed <= 1.0) {
+          // 0.5-1.0 maps to 0-50
+          return ((speed - 0.5) / 0.5) * 50;
+        } else {
+          // 1.0-2.0 maps to 50-100
+          return 50 + ((speed - 1.0) / 1.0) * 50;
+        }
+      }
+
+      function updateSpeedFromSlider(sliderVal) {
+        const speed = sliderToSpeed(sliderVal);
+        updateSpeedDisplay(speed, sliderVal);
+      }
+
+      function updateSpeed(speed) {
+        const sliderVal = speedToSlider(speed);
+        speedFader.value = sliderVal;
+        updateSpeedDisplay(speed, sliderVal);
+      }
+
+      function updateSpeedDisplay(speed, sliderVal) {
+        // Update display
+        speedValue.textContent = speed.toFixed(2) + '×';
+
+        // Update glow width - use calc to account for track padding
+        faderGlow.style.width = `calc(${sliderVal}% - 8px)`;
+
+        // Store current speed for new playback
+        player.playbackSpeed = speed;
+
+        // Apply to audio if playing
+        if (player.sourceNode) {
+          player.sourceNode.playbackRate.value = speed;
+        }
+      }
+
+      // Fader input
+      speedFader.addEventListener('input', (e) => {
+        updateSpeedFromSlider(parseFloat(e.target.value));
+      });
+
+      // Reset button
+      pitchResetBtn.addEventListener('click', () => updateSpeed(1.0));
+
+      // Initialize
+      player.playbackSpeed = 1.0;
 
       // Help system
       const helpTrigger = document.getElementById("helpTrigger");

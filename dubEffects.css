@@ -107,3 +107,471 @@
     border-radius: 50%;
     animation: ripple 0.8s ease-out infinite;
 }
+
+/* ============================================
+   EFFECTS BANK - Tabbed Container
+   ============================================ */
+
+.effects-bank {
+    max-width: fit-content;
+    margin: 12px auto 0;
+}
+
+.effects-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 20px;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+}
+
+.effects-tab {
+    padding: 10px 20px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+    border: 1px solid #2a2a2a;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    color: #666;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.effects-tab:hover {
+    background: linear-gradient(180deg, #222 0%, #1a1a1a 100%);
+    color: #888;
+}
+
+.effects-tab.active {
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+    color: #ff9500;
+    border-color: #2a2a2a;
+    border-bottom: 1px solid #141414;
+    margin-bottom: -1px;
+}
+
+.effects-tab i {
+    font-size: 12px;
+}
+
+.effects-panel {
+    display: none;
+}
+
+.effects-panel.active {
+    display: block;
+}
+
+/* Coming Soon Panel */
+.coming-soon-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+    min-height: 110px;
+    min-width: 952px; /* Match dub pads container: 8 pads * 110px + 7 gaps * 12px + padding */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.coming-soon-icon {
+    font-size: 32px;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+.coming-soon-panel h3 {
+    margin: 0 0 6px 0;
+    color: #666;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.coming-soon-panel p {
+    margin: 0 0 12px 0;
+    color: #555;
+    font-size: 12px;
+}
+
+.coming-soon-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(180deg, #333 0%, #222 100%);
+    border: 1px solid #444;
+    border-radius: 12px;
+    color: #888;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   PITCH CONTROL PANEL
+   ============================================ */
+
+.pitch-control-panel {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 15px 30px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 952px;
+    box-sizing: border-box;
+}
+
+/* Simplified Pitch Panel */
+.pitch-control-panel-simple {
+    display: flex;
+    justify-content: center;
+    padding: 15px 30px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 952px;
+    box-sizing: border-box;
+}
+
+.pitch-fader-section-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.pitch-reset-btn-inline {
+    padding: 8px 24px;
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pitch-reset-btn-inline:hover {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    color: #ff9500;
+    border-color: #ff9500;
+}
+
+.pitch-info-inline {
+    font-size: 11px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pitch-info-inline i {
+    color: #444;
+}
+
+/* Fader Section */
+.pitch-fader-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+    background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+    border-radius: 6px;
+    border: 1px solid #2a2a2a;
+    flex: 1;
+}
+
+.fader-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ff9500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.fader-container-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.fader-min, .fader-max {
+    font-size: 10px;
+    color: #555;
+    font-weight: 500;
+    min-width: 30px;
+}
+
+.fader-track-horizontal {
+    position: relative;
+    flex: 1;
+    height: 30px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #252525 50%, #1a1a1a 100%);
+    border-radius: 4px;
+    box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.8),
+        inset 0 0 4px rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+}
+
+.fader-glow-horizontal {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    width: 50%;
+    background: linear-gradient(90deg, #cc7700 0%, #ff9500 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
+    pointer-events: none;
+    transition: width 0.1s ease;
+    margin-left: 4px;
+}
+
+/* Horizontal Fader Slider */
+.speed-fader-horizontal {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.speed-fader-horizontal::-webkit-slider-track {
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.speed-fader-horizontal::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 28px;
+    background: linear-gradient(90deg, 
+        #555 0%, 
+        #3a3a3a 20%, 
+        #2a2a2a 50%,
+        #3a3a3a 80%,
+        #555 100%);
+    border-radius: 4px;
+    cursor: grab;
+    box-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+}
+
+.speed-fader-horizontal::-webkit-slider-thumb:hover {
+    background: linear-gradient(90deg, 
+        #666 0%, 
+        #4a4a4a 20%, 
+        #3a3a3a 50%,
+        #4a4a4a 80%,
+        #666 100%);
+}
+
+.speed-fader-horizontal::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    background: linear-gradient(90deg, 
+        #777 0%, 
+        #555 20%, 
+        #444 50%,
+        #555 80%,
+        #777 100%);
+}
+
+/* Firefox slider styles */
+.speed-fader-horizontal::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.speed-fader-horizontal::-moz-range-thumb {
+    width: 20px;
+    height: 28px;
+    background: linear-gradient(90deg, #555 0%, #3a3a3a 20%, #2a2a2a 50%, #3a3a3a 80%, #555 100%);
+    border-radius: 4px;
+    cursor: grab;
+    border: 1px solid #444;
+}
+
+.fader-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #39ff14;
+    font-family: 'Monaco', 'Menlo', monospace;
+    background: #0a0a0a;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    min-width: 50px;
+    text-align: center;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Presets Section */
+.pitch-presets-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+}
+
+.preset-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pitch-preset-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.pitch-preset-btn {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(145deg, #2d2d2d 0%, #1f1f1f 100%);
+    border-radius: 6px;
+    border: 1px solid #3a3a3a;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.1s ease;
+    box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.pitch-preset-btn:hover {
+    background: linear-gradient(145deg, #353535 0%, #282828 100%);
+    border-color: #454545;
+}
+
+.pitch-preset-btn.active {
+    background: linear-gradient(145deg, #ff9500 0%, #cc7700 100%);
+    border-color: #ffb347;
+    box-shadow: 
+        0 0 15px rgba(255, 149, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pitch-preset-btn.active .preset-icon,
+.pitch-preset-btn.active .preset-name {
+    color: #1a1a1a;
+}
+
+.preset-icon {
+    font-size: 22px;
+    font-weight: 700;
+    color: #888;
+    transition: color 0.1s ease;
+}
+
+.preset-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.1s ease;
+}
+
+.pitch-reset-btn {
+    padding: 8px 20px;
+    background: linear-gradient(180deg, #333 0%, #222 100%);
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #888;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    margin-top: 8px;
+}
+
+.pitch-reset-btn:hover {
+    background: linear-gradient(180deg, #444 0%, #333 100%);
+    color: #aaa;
+}
+
+.pitch-reset-btn i {
+    font-size: 10px;
+}
+
+/* Info Section */
+.pitch-info-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 10px;
+}
+
+.pitch-info-text {
+    font-size: 11px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 1px solid #2a2a2a;
+}
+
+.pitch-info-text i {
+    color: #444;
+}
