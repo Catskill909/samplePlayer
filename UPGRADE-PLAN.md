@@ -182,10 +182,10 @@ VITE_APP_VERSION=2.0.0
 - [x] ES module exports/imports
 - [x] Clean up global scope (window.player)
 
-### Phase 4: npm Packages (ongoing)
-- [ ] Research and test VU meter packages
-- [ ] Integrate chosen packages
-- [ ] Add any other desired packages
+### Phase 4: npm Packages ✅ READY
+- [x] npm ecosystem now available
+- [x] Can install any package with `npm install`
+- [ ] Future: Add packages as needed (see future-dev.md)
 
 ### Phase 5: Deploy (30 min) ✅ COMPLETED
 - [x] Create nixpacks.toml
@@ -196,67 +196,7 @@ VITE_APP_VERSION=2.0.0
 
 ---
 
-## 🎨 VU Meter Implementation Plan
-
-### Analysis of Options
-
-| Option | License | Compatibility | Notes |
-|--------|---------|---------------|-------|
-| `angular-vumeter` | ISC | ❌ AngularJS only | Requires Angular 1.x framework |
-| Highcharts | Commercial | ⚠️ Paid license | Too expensive for OSS project |
-| `web-audio-peak-meter` | MIT | ✅ Vanilla JS | **RECOMMENDED** - 1,275 weekly downloads |
-| `@byomakase/vu-meter` | MIT | ⚠️ Omakase Player | Tied to specific video player |
-| Custom Canvas | N/A | ✅ Full control | More work, but matches our style |
-
-### ✅ Recommended Approach: Dual Meter System
-
-**Package Choice: `web-audio-peak-meter`**
-- MIT licensed, actively maintained
-- Works directly with Web Audio API (what we use)
-- Highly configurable (colors, orientation, dB range)
-- Easy to style to match our hardware aesthetic
-
-**Implementation Plan:**
-1. **Digital Meter (web-audio-peak-meter)** - Modern LED-style bars
-2. **Analog Meter (Custom Canvas)** - Retro VU needle like the Angular demo
-3. **Toggle Switch** - User can switch between meter styles
-
-### Installation
-```bash
-npm install web-audio-peak-meter
-```
-
-### Integration Points
-- Hook into existing `masterGainNode` in SamplePlayer.js
-- Create `src/ui/VUMeter.js` module
-- Add meter container to MASTER tab in index.html
-- Style with hardware aesthetic (brushed metal, LED glow)
-
-### Custom Analog Needle Meter
-For the retro analog look (like the Angular demo), we'll create a custom Canvas-based meter:
-- SVG or Canvas needle animation
-- VU-style scale (-20 to +3 dB)
-- Peak hold indicator
-- Warm backlight glow
-
-### UI Toggle
-```html
-<div class="meter-toggle">
-  <button class="digital active">DIGITAL</button>
-  <button class="analog">ANALOG</button>
-</div>
-<div id="vu-meter-container"></div>
-```
-
-### Styling to Match App
-- Dark background with subtle gradients
-- Green/yellow/red LED colors for digital
-- Cream/vintage look for analog
-- Hardware-style beveled edges
-
----
-
-## 📊 Settings Export/Import Format
+## 📊 Settings Export/Import Format (Future)
 
 ```json
 {
@@ -305,7 +245,7 @@ After migration, the app should:
 | Phase 1: Setup | 30 min | ✅ Done |
 | Phase 2: Convert | 1-2 hours | ✅ Done |
 | Phase 3: Organize | 1 hour | ✅ Done |
-| Phase 4: Packages | Ongoing | 🔄 VU Meter next |
+| Phase 4: Packages | Ready | ✅ npm available |
 | Phase 5: Deploy | 30 min | ✅ Done |
 
 **Total initial conversion: ✅ COMPLETED December 15, 2025**
@@ -314,11 +254,13 @@ After migration, the app should:
 
 ## 🤔 Next Steps
 
-1. **VU Meters** - Install `web-audio-peak-meter` + build custom analog meter
-2. **Settings Export/Import** - JSON backup/restore feature
-3. **React?** - Stay vanilla JS for now (simpler)
-4. **TypeScript?** - Consider later if codebase grows
-5. **PWA?** - Make it installable as an app (easy with Vite)
+See `future-dev.md` for feature roadmap. Key opportunities with npm/Vite:
+
+1. **Settings Export/Import** - JSON backup/restore feature
+2. **PWA Support** - Make it installable (easy with `vite-plugin-pwa`)
+3. **Audio Libraries** - Tone.js, Howler.js for advanced features
+4. **UI Components** - Any npm package now available
+5. **TypeScript** - Add type safety if codebase grows
 
 ---
 
@@ -328,28 +270,4 @@ After migration, the app should:
 - Maintain keyboard shortcuts - essential for performance use
 - Don't over-engineer - simplicity is a feature
 - Test on actual hardware/performance scenarios
-
----
-
-## 🎯 VU Meter Feature Roadmap
-
-### Phase 1: Digital Meter (web-audio-peak-meter)
-1. Install package: `npm install web-audio-peak-meter`
-2. Create `src/ui/VUMeter.js` module
-3. Connect to `masterGainNode` audio path
-4. Add to MASTER tab UI
-5. Style to match hardware theme
-
-### Phase 2: Custom Analog Needle Meter
-1. Create Canvas-based VU meter
-2. Implement needle physics (smooth movement, peak hold)
-3. Design vintage VU scale (-20 to +3 dB)
-4. Add warm backlight effect
-5. Match the look from Angular demo
-
-### Phase 3: Meter Toggle
-1. Add toggle switch in UI
-2. Persist preference in LocalStorage
-3. Smooth transition between meter types
-
-### Estimated Time: 2-3 hours total
+- Current LED VU meters work great - no need to change

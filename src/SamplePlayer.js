@@ -932,6 +932,12 @@ class SamplePlayer {
         // Reset VU meters
         this.resetVUMeters();
 
+        // Stop and reset analog VU meter
+        if (window.analogVuMeter) {
+            window.analogVuMeter.stop();
+            window.analogVuMeter.reset();
+        }
+
         // Clear analyser references (actual disconnect happens after fade)
         this.analyserNodeL = null;
         this.analyserNodeR = null;

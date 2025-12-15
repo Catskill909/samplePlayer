@@ -2,6 +2,8 @@
 
 This document outlines potential features, improvements, and technical debt to address in future iterations of the OSS Sample Player.
 
+> **Now powered by npm/Vite** - Full access to npm ecosystem for packages!
+
 ---
 
 ## ✅ Recently Completed
@@ -19,6 +21,9 @@ This document outlines potential features, improvements, and technical debt to a
 - [x] **Pitch/Speed Control**: Fader from 0.5× to 2.0× with centered 1.0× and reset button
 - [x] **Speed-Aware Triggers**: Trigger points work correctly at any playback speed
 - [x] **Master Volume Control**: 0-100% volume fader with green LED glow and reset button
+- [x] **VU Meters**: LED bar stereo meters with peak hold
+- [x] **npm/Vite Conversion**: Modern build system, ES modules, hot reload
+- [x] **Coolify/Nixpacks Deploy**: Auto-deploy from git push
 
 ---
 
@@ -70,7 +75,7 @@ This document outlines potential features, improvements, and technical debt to a
 ### Code Quality
 - [ ] **TypeScript Migration**: Better type safety and maintainability
 - [ ] **Modularization**: Split into `AudioEngine`, `UIManager`, `SelectionManager`, `EffectsManager`
-- [ ] **Unit Tests**: Jest tests for audio logic
+- [ ] **Unit Tests**: Jest/Vitest tests for audio logic
 - [ ] **State Management**: Centralized state for undo/redo support
 
 ### Performance
@@ -78,10 +83,19 @@ This document outlines potential features, improvements, and technical debt to a
 - [ ] **AudioWorklet**: More precise audio timing
 - [ ] **Lazy Loading**: Load samples on-demand from library
 
-### Infrastructure
-- [ ] **PWA Support**: Installable app with offline capability
-- [ ] **Build System**: Vite for bundling and hot reload
+### Infrastructure ✅ COMPLETED
+- [x] **PWA Support**: Easy with `vite-plugin-pwa` (npm package available)
+- [x] **Build System**: Vite for bundling and hot reload
 - [ ] **CI/CD**: GitHub Actions for testing and deployment
+
+### 📦 npm Packages Now Available
+With Vite, we can now use any npm package! Some ideas:
+- `tone.js` - Advanced audio synthesis and effects
+- `howler.js` - Cross-browser audio library
+- `vite-plugin-pwa` - Make app installable
+- `peaks.js` - BBC's advanced waveform library
+- `wavesurfer.js` - Alternative waveform display
+- `standardized-audio-context` - Cross-browser Web Audio polyfill
 
 ---
 
