@@ -42,6 +42,7 @@ class SamplePlayer {
 
         // Playback speed state
         this.playbackSpeed = 1.0;
+        this.effectiveDuration = null; // Actual duration accounting for playback speed
 
         // Master volume state
         this.masterVolume = 1.0;
@@ -655,7 +656,10 @@ class SamplePlayer {
         // Account for playback speed when calculating current time
         const speed = this.playbackSpeed || 1.0;
         const currentTime = (this.audioContext.currentTime - this.startTime) * speed;
-        const progress = currentTime / this.audioBuffer.duration;
+
+        // Use effective duration for progress calculation (accounts for pitch changes)
+        const duration = this.effectiveDuration || this.audioBuffer.duration;
+        const progress = currentTime / duration;
         const position = Math.floor(progress * this.elements.waveform.offsetWidth);
 
         this.playheadPosition = currentTime;
@@ -664,9 +668,9 @@ class SamplePlayer {
         this.elements.playhead.style.left = `${currentPosition}px`;
         this.elements.progressOverlay.style.width = `${currentPosition}px`;
 
-        // Update title with countdown (time remaining)
+        // Update title with countdown (time remaining) using effective duration
         if (this.currentSampleName && this.audioBuffer) {
-            const remainingTime = Math.max(0, this.audioBuffer.duration - currentTime);
+            const remainingTime = Math.max(0, duration - currentTime);
             const remainingMins = Math.floor(remainingTime / 60);
             const remainingSecs = Math.floor(remainingTime % 60);
             const remainingText = `${remainingMins}:${remainingSecs.toString().padStart(2, '0')}`;
@@ -693,7 +697,8 @@ class SamplePlayer {
             }
         }
 
-        if (currentTime >= this.audioBuffer.duration) {
+        // Use effective duration for stop condition (prevents early cutoff on pitch down)
+        if (currentTime >= duration) {
             this.stopPlayback();
             return;
         }
@@ -826,6 +831,10 @@ class SamplePlayer {
         // Apply playback speed
         const speed = this.playbackSpeed || 1.0;
 
+        // Calculate effective duration accounting for playback speed
+        // Slower speeds (< 1.0) make the sample longer, faster speeds (> 1.0) make it shorter
+        this.effectiveDuration = this.audioBuffer.duration / speed;
+
         // Ensure precise timing
         const startDelay = 0.005; // 5ms scheduling delay for better precision
         const exactStartTime = this.audioContext.currentTime + startDelay;
@@ -834,6 +843,13 @@ class SamplePlayer {
 
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
+
+        // Add onended event as safety net for when playback completes
+        this.sourceNode.onended = () => {
+            if (this.isPlaying) {
+                this.stopPlayback();
+            }
+        };
 
         // Create gain node for volume control and smooth fade-in/fade-out
         this.gainNode = this.audioContext.createGain();
