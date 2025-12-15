@@ -816,9 +816,12 @@ class SamplePlayer {
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
 
-        // Create gain node for smooth fade-out (prevents click)
+        // Create gain node for smooth fade-in/fade-out (prevents click)
         this.gainNode = this.audioContext.createGain();
-        this.gainNode.gain.value = 1;
+        // Start at 0 for fade-in
+        this.gainNode.gain.setValueAtTime(0, exactStartTime);
+        // Fade in over 10ms to prevent click at start
+        this.gainNode.gain.linearRampToValueAtTime(1, exactStartTime + 0.010);
 
         // Create analyser nodes for VU meter
         this.analyserNodeL = this.audioContext.createAnalyser();
