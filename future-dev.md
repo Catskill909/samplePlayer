@@ -16,24 +16,8 @@ This document outlines potential features, improvements, and technical debt to a
 - [x] **Countdown Timer**: Shows remaining time instead of elapsed
 - [x] **Loop Selection**: Toggle to loop the selected region continuously
 - [x] **Effects Bank Tabs**: DUB FX, PITCH, MASTER tabs for organized effects
-
----
-
-## 🚧 In Progress
-
-### Pitch Control Panel
-Speed control using Web Audio `playbackRate` (note: pitch and speed are linked)
-
-**Controls:**
-- [ ] **Speed Fader**: Vertical slider (0.5x to 2.0x playback rate)
-- [ ] **Half-Speed Button**: Quick preset to 0.5x
-- [ ] **Normal Button**: Reset to 1.0x  
-- [ ] **Double-Speed Button**: Quick preset to 2.0x
-
-**Technical Notes:**
-- Uses `sourceNode.playbackRate.value` 
-- Pitch and speed are inherently linked in Web Audio (slower = lower pitch)
-- True pitch-shifting (speed independent) requires complex DSP (future consideration)
+- [x] **Pitch/Speed Control**: Fader from 0.5× to 2.0× with centered 1.0× and reset button
+- [x] **Speed-Aware Triggers**: Trigger points work correctly at any playback speed
 
 ---
 

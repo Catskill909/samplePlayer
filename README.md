@@ -29,6 +29,13 @@ A web-based audio sample player designed for real-time performance and sound man
 - **Spring** (`D`): Spring reverb.
 - **Ghost** (`F`): Spectral echo.
 
+### 🎚️ Pitch/Speed Control
+- **Speed Fader**: Adjust playback speed from 0.5× (half speed) to 2.0× (double speed).
+- **Centered at 1.0×**: Fader naturally centers at normal speed for easy reference.
+- **Real-time Control**: Change speed while playing - affects both pitch and tempo together.
+- **Reset Button**: Instantly snap back to normal speed.
+- **Works with Triggers**: Trigger points play at the current speed setting.
+
 ## Getting Started
 
 1.  **Open the App**:
