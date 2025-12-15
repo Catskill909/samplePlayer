@@ -44,14 +44,48 @@ A web-based audio sample player designed for real-time performance and sound man
 
 ## Getting Started
 
-1.  **Open the App**:
-    - For local development, run a simple server (e.g., `python3 -m http.server 8000`) and open `http://localhost:8000`.
-2.  **Load Audio**: Click "Load Sample" or "Browse Samples".
-3.  **Play**: Click "Play" or use the trigger pads.
-4.  **Set Triggers**: Press `Space` while playing to mark a spot. Drag the red line to adjust.
-5.  **Apply Effects**: Hold down effect keys (`Q`-`F`) to apply effects momentarily.
+### Development
+```bash
+npm install        # Install dependencies
+npm run dev        # Start dev server at http://localhost:3000
+```
+
+### Production Build
+```bash
+npm run build      # Build to dist/
+npm run preview    # Preview production build
+```
+
+### Deployment (Coolify/Nixpacks)
+The project includes `nixpacks.toml` for automatic deployment:
+- Push to git → Coolify auto-deploys
+- Builds with Vite, serves static files from `dist/`
+
+### Legacy (direct file serving)
+If you just want to serve the source files directly:
+1. Run a simple server: `python3 -m http.server 8000`
+2. Open `http://localhost:8000`
+
+## Project Structure
+```
+samplePlayer/
+├── src/
+│   ├── main.js           # Entry point
+│   ├── SamplePlayer.js   # Main player class
+│   ├── DubEffects.js     # Audio effects
+│   └── styles/           # CSS files
+├── public/
+│   └── audio/            # Sample files
+├── index.html            # Main HTML
+├── vite.config.js        # Vite configuration
+├── nixpacks.toml         # Coolify deployment
+└── package.json          # npm configuration
+```
 
 ## Technologies
-- HTML5 Audio API / Web Audio API
-- Vanilla JavaScript (ES6+)
-- CSS3 (Flexbox, Grid, Animations)
+- **Vite** - Build tool with hot reload
+- **ES Modules** - Modern JavaScript imports
+- **Web Audio API** - Audio playback, effects, pitch control
+- **HTML5 Canvas** - Waveform visualization
+- **LocalStorage** - Trigger point persistence
+- **Nixpacks** - Coolify deployment
