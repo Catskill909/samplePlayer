@@ -222,5 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Listen for messages from help.html iframe
+    window.addEventListener('message', (event) => {
+        if (event.data === 'closeHelp') {
+            helpOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
     console.log('OSS Sample Player v2.0.0 initialized');
 });

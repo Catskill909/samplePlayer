@@ -192,8 +192,7 @@
 
 <body>
   <div class="help-wrapper">
-    <button class="close-help-btn" onclick="parent.document.getElementById('closeHelp').click()"
-      aria-label="Close Help">
+    <button class="close-help-btn" onclick="window.parent.postMessage('closeHelp', '*')" aria-label="Close Help">
       <i class="fas fa-times"></i>
     </button>
     <div class="help-content" id="helpContent">
