@@ -73,9 +73,13 @@ class SamplePlayer {
 
         this.initializeEventListeners();
 
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
-            this.cleanup();
+        // Cleanup on page unload (not on iframe navigation)
+        window.addEventListener('beforeunload', (e) => {
+            // Only cleanup if this is a real page unload, not an iframe navigation
+            // Check if the event target is the window itself
+            if (e.target === document) {
+                this.cleanup();
+            }
         });
     }
 

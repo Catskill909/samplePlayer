@@ -149,11 +149,53 @@
     .scroll-indicator.fade-out {
       animation: fadeOut 0.5s ease-out forwards;
     }
+
+    .close-help-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(145deg, #3a3a3a 0%, #252525 100%);
+      border: 1px solid #444;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      transition: all 0.15s ease;
+    }
+
+    .close-help-btn:hover {
+      background: linear-gradient(145deg, #454545 0%, #303030 100%);
+    }
+
+    .close-help-btn:active {
+      transform: scale(0.95);
+    }
+
+    .close-help-btn i {
+      font-size: 20px;
+      color: #aaa;
+    }
+
+    .close-help-btn:hover i {
+      color: #fff;
+    }
   </style>
 </head>
 
 <body>
   <div class="help-wrapper">
+    <button class="close-help-btn" onclick="parent.document.getElementById('closeHelp').click()"
+      aria-label="Close Help">
+      <i class="fas fa-times"></i>
+    </button>
     <div class="help-content" id="helpContent">
       <div class="help-section">
         <h2>Sample Trigger Player Guide</h2>

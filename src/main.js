@@ -195,13 +195,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVolumeDisplay(1.0);
 
     // ==========================================
-    // HELP SYSTEM
+    // HELP SYSTEM (simple, original)
     // ==========================================
     const helpTrigger = document.getElementById('helpTrigger');
     const helpOverlay = document.getElementById('helpOverlay');
     const closeHelp = document.getElementById('closeHelp');
+    const helpFrame = document.getElementById('helpFrame');
 
     helpTrigger?.addEventListener('click', () => {
+        // Force reload help.html every time to avoid cache issues
+        // Add timestamp to bust cache
+        helpFrame.src = 'help.html?t=' + Date.now();
         helpOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
