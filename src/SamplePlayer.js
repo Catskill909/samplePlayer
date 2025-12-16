@@ -845,8 +845,10 @@ class SamplePlayer {
         this.sourceNode.buffer = this.audioBuffer;
 
         // Add onended event as safety net for when playback completes
+        // Capture reference to current source to prevent old sources from stopping new playback
+        const currentSource = this.sourceNode;
         this.sourceNode.onended = () => {
-            if (this.isPlaying) {
+            if (this.isPlaying && this.sourceNode === currentSource) {
                 this.stopPlayback();
             }
         };
