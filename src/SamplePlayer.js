@@ -657,9 +657,8 @@ class SamplePlayer {
         const speed = this.playbackSpeed || 1.0;
         const currentTime = (this.audioContext.currentTime - this.startTime) * speed;
 
-        // Use effective duration for progress calculation (accounts for pitch changes)
-        const duration = this.effectiveDuration || this.audioBuffer.duration;
-        const progress = currentTime / duration;
+        // Use ORIGINAL buffer duration for visual positioning (waveform shows original audio)
+        const progress = currentTime / this.audioBuffer.duration;
         const position = Math.floor(progress * this.elements.waveform.offsetWidth);
 
         this.playheadPosition = currentTime;
@@ -668,9 +667,10 @@ class SamplePlayer {
         this.elements.playhead.style.left = `${currentPosition}px`;
         this.elements.progressOverlay.style.width = `${currentPosition}px`;
 
-        // Update title with countdown (time remaining) using effective duration
+        // Use effective duration for remaining time display
         if (this.currentSampleName && this.audioBuffer) {
-            const remainingTime = Math.max(0, duration - currentTime);
+            const effectiveDuration = this.effectiveDuration || this.audioBuffer.duration;
+            const remainingTime = Math.max(0, effectiveDuration - currentTime);
             const remainingMins = Math.floor(remainingTime / 60);
             const remainingSecs = Math.floor(remainingTime % 60);
             const remainingText = `${remainingMins}:${remainingSecs.toString().padStart(2, '0')}`;
@@ -698,7 +698,8 @@ class SamplePlayer {
         }
 
         // Use effective duration for stop condition (prevents early cutoff on pitch down)
-        if (currentTime >= duration) {
+        const effectiveDuration = this.effectiveDuration || this.audioBuffer.duration;
+        if (currentTime >= effectiveDuration) {
             this.stopPlayback();
             return;
         }
