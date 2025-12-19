@@ -22,6 +22,7 @@ class SamplePlayer {
         this.currentSampleName = null; // Track sample display name
         this.dubEffects = null;
         this.draggingIndex = null; // Track which trigger is being dragged
+        this.effectToggles = {}; // Track toggle state for each effect
 
         // VU meter state
         this.peakL = 0;
@@ -278,23 +279,24 @@ class SamplePlayer {
                 this.markTriggerPoint();
             }
 
-            // Dub Effects (Q, W, E, R, A, S, D, F)
+            // Dub Effects Toggle (Q, W, E, R, A, S, D, F) - click to toggle on/off
             const pad = document.querySelector(`.dub-pad[data-key="${e.key.toLowerCase()}"]`);
             if (pad) {
-                pad.classList.add('active');
                 const effect = pad.dataset.effect;
-                this.dubEffects?.triggerEffect(effect, true);
+                // Toggle the effect state
+                this.effectToggles[effect] = !this.effectToggles[effect];
+                const isActive = this.effectToggles[effect];
+
+                if (isActive) {
+                    pad.classList.add('active');
+                } else {
+                    pad.classList.remove('active');
+                }
+                this.dubEffects?.triggerEffect(effect, isActive);
             }
         });
 
-        document.addEventListener('keyup', (e) => {
-            const pad = document.querySelector(`.dub-pad[data-key="${e.key.toLowerCase()}"]`);
-            if (pad) {
-                pad.classList.remove('active');
-                const effect = pad.dataset.effect;
-                this.dubEffects?.triggerEffect(effect, false);
-            }
-        });
+        // No keyup handler needed for toggle behavior
 
         this.elements.padsContainer.addEventListener('click', (e) => {
             const pad = e.target.closest('.trigger-pad');
@@ -311,37 +313,38 @@ class SamplePlayer {
             }
         });
 
-        // Dub pad event listeners
+        // Dub pad event listeners - Toggle behavior (click to turn on, click again to turn off)
         document.querySelectorAll('.dub-pad').forEach(pad => {
             const effect = pad.dataset.effect;
 
-            // Handle mouse events
-            pad.addEventListener('mousedown', () => {
-                pad.classList.add('active');
-                this.dubEffects?.triggerEffect(effect, true);
+            // Handle click for toggle
+            pad.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Toggle the effect state
+                this.effectToggles[effect] = !this.effectToggles[effect];
+                const isActive = this.effectToggles[effect];
+
+                if (isActive) {
+                    pad.classList.add('active');
+                } else {
+                    pad.classList.remove('active');
+                }
+                this.dubEffects?.triggerEffect(effect, isActive);
             });
 
-            pad.addEventListener('mouseup', () => {
-                pad.classList.remove('active');
-                this.dubEffects?.triggerEffect(effect, false);
-            });
-
-            pad.addEventListener('mouseleave', () => {
-                pad.classList.remove('active');
-                this.dubEffects?.triggerEffect(effect, false);
-            });
-
-            // Handle touch events
+            // Handle touch for toggle
             pad.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                pad.classList.add('active');
-                this.dubEffects?.triggerEffect(effect, true);
-            });
+                // Toggle the effect state
+                this.effectToggles[effect] = !this.effectToggles[effect];
+                const isActive = this.effectToggles[effect];
 
-            pad.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                pad.classList.remove('active');
-                this.dubEffects?.triggerEffect(effect, false);
+                if (isActive) {
+                    pad.classList.add('active');
+                } else {
+                    pad.classList.remove('active');
+                }
+                this.dubEffects?.triggerEffect(effect, isActive);
             });
         });
     }
