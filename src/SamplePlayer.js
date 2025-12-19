@@ -690,6 +690,9 @@ class SamplePlayer {
         this.ctx.shadowBlur = 2;
         this.ctx.stroke();
         this.ctx.shadowBlur = 0;
+
+        // Mark that waveform has a sample loaded (for showing selection hint)
+        this.elements.waveform.classList.add('has-sample');
     }
 
     updatePlayhead() {

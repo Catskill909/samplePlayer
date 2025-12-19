@@ -1,5 +1,6 @@
 /* Hardware-inspired styles */
-html, body {
+html,
+body {
     overflow: hidden;
     overscroll-behavior: none;
     position: fixed;
@@ -21,7 +22,7 @@ body {
     padding: 16px 32px;
     background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #151515 100%);
     border-radius: 12px;
-    box-shadow: 
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.6),
         inset 0 1px 0 rgba(255, 255, 255, 0.05),
         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
@@ -45,7 +46,7 @@ body {
     position: relative;
     border-radius: 6px;
     overflow: visible;
-    box-shadow: 
+    box-shadow:
         inset 0 2px 8px rgba(0, 0, 0, 0.8),
         inset 0 0 20px rgba(0, 0, 0, 0.4),
         0 1px 0 rgba(255, 255, 255, 0.05);
@@ -62,13 +63,11 @@ body {
     border-radius: 4px;
     cursor: crosshair;
     /* Subtle scanline effect */
-    background-image: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.1) 2px,
-        rgba(0, 0, 0, 0.1) 4px
-    );
+    background-image: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.1) 2px,
+            rgba(0, 0, 0, 0.1) 4px);
 }
 
 /* Selection hint tooltip - shows on hover */
@@ -92,13 +91,32 @@ body {
     white-space: nowrap;
 }
 
-/* Show hint on waveform hover */
-.waveform-inner:hover .selection-hint {
-    opacity: 1;
+/* Show hint on waveform hover - only when sample is loaded */
+/* Hint appears briefly then fades out automatically */
+.waveform.has-sample .waveform-inner:hover .selection-hint {
+    animation: hint-show-hide 3s ease forwards;
+}
+
+@keyframes hint-show-hide {
+    0% {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 /* Hide hint when there's an active selection */
-.selection-overlay.active ~ .selection-hint {
+.selection-overlay.active~.selection-hint {
     opacity: 0 !important;
 }
 
@@ -197,7 +215,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     pointer-events: none;
 }
 
@@ -210,7 +228,7 @@ body {
     padding: 12px 16px;
     background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
     border-radius: 8px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .trigger-pad {
@@ -229,7 +247,7 @@ body {
     user-select: none;
     gap: 6px;
     color: #888;
-    box-shadow: 
+    box-shadow:
         0 4px 8px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
@@ -241,7 +259,7 @@ body {
     background: linear-gradient(145deg, #2d5a3d 0%, #1a3d28 100%);
     color: #4ade80;
     border-color: #3d7a52;
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(74, 222, 128, 0.15),
         0 0 20px rgba(74, 222, 128, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
@@ -267,7 +285,7 @@ body {
 
 .trigger-pad:active {
     transform: scale(0.96);
-    box-shadow: 
+    box-shadow:
         0 2px 4px rgba(0, 0, 0, 0.4),
         inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -275,7 +293,7 @@ body {
 .trigger-pad.marked {
     background: linear-gradient(145deg, #c1121f 0%, #8b0a14 100%);
     color: #fff;
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(193, 18, 31, 0.4),
         0 0 20px rgba(230, 57, 70, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.15),
@@ -305,7 +323,7 @@ button {
     border: 1px solid #444;
     border-radius: 4px;
     transition: all 0.15s ease;
-    box-shadow: 
+    box-shadow:
         0 2px 4px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
@@ -317,7 +335,7 @@ button:hover {
 
 button:active {
     transform: translateY(1px);
-    box-shadow: 
+    box-shadow:
         0 1px 2px rgba(0, 0, 0, 0.3),
         inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -341,7 +359,7 @@ button:disabled {
     cursor: pointer;
     color: #ccc;
     transition: all 0.15s ease;
-    box-shadow: 
+    box-shadow:
         0 2px 4px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
@@ -382,7 +400,7 @@ input[type="file"] {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 
+    box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.6),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     border: 1px solid #3a3a3a;
@@ -660,7 +678,7 @@ input[type="file"] {
     opacity: 0;
     visibility: hidden;
     transition: all 0.15s ease;
-    box-shadow: 
+    box-shadow:
         0 2px 8px rgba(255, 149, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     z-index: 10;
@@ -669,7 +687,7 @@ input[type="file"] {
 .play-selection-btn:hover {
     background: linear-gradient(180deg, #ffb347 0%, #ff9500 100%);
     transform: translateX(-50%) translateY(-1px);
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(255, 149, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -704,7 +722,7 @@ input[type="file"] {
     opacity: 0;
     visibility: hidden;
     transition: all 0.15s ease;
-    box-shadow: 
+    box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     z-index: 10;
@@ -713,7 +731,7 @@ input[type="file"] {
 .loop-selection-btn:hover {
     background: linear-gradient(180deg, #555 0%, #454545 100%);
     color: #fff;
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -731,14 +749,14 @@ input[type="file"] {
     background: linear-gradient(180deg, #39ff14 0%, #2ecc0f 100%);
     color: #1a1a1a;
     border-color: #4dff28;
-    box-shadow: 
+    box-shadow:
         0 2px 12px rgba(57, 255, 20, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .loop-selection-btn.active:hover {
     background: linear-gradient(180deg, #4dff28 0%, #39ff14 100%);
-    box-shadow: 
+    box-shadow:
         0 4px 16px rgba(57, 255, 20, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -756,7 +774,7 @@ input[type="file"] {
     background: linear-gradient(180deg, #0a0a0a 0%, #141414 100%);
     border-radius: 6px;
     border: 1px solid #2a2a2a;
-    box-shadow: 
+    box-shadow:
         inset 0 2px 6px rgba(0, 0, 0, 0.8),
         0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -784,7 +802,7 @@ input[type="file"] {
     border-radius: 2px;
     overflow: hidden;
     border: 1px solid #1a1a1a;
-    box-shadow: 
+    box-shadow:
         inset 0 1px 3px rgba(0, 0, 0, 0.8),
         inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -797,29 +815,24 @@ input[type="file"] {
     height: 100%;
     width: 0%;
     transition: width 0.05s linear;
-    background: linear-gradient(90deg, 
-        #00cc00 0%, 
-        #00cc00 60%, 
-        #cccc00 75%, 
-        #cc6600 85%,
-        #cc0000 95%,
-        #cc0000 100%
-    );
+    background: linear-gradient(90deg,
+            #00cc00 0%,
+            #00cc00 60%,
+            #cccc00 75%,
+            #cc6600 85%,
+            #cc0000 95%,
+            #cc0000 100%);
     /* LED segments effect */
-    mask: repeating-linear-gradient(
-        90deg,
-        rgba(0,0,0,1) 0px,
-        rgba(0,0,0,1) 3px,
-        rgba(0,0,0,0) 3px,
-        rgba(0,0,0,0) 4px
-    );
-    -webkit-mask: repeating-linear-gradient(
-        90deg,
-        rgba(0,0,0,1) 0px,
-        rgba(0,0,0,1) 3px,
-        rgba(0,0,0,0) 3px,
-        rgba(0,0,0,0) 4px
-    );
+    mask: repeating-linear-gradient(90deg,
+            rgba(0, 0, 0, 1) 0px,
+            rgba(0, 0, 0, 1) 3px,
+            rgba(0, 0, 0, 0) 3px,
+            rgba(0, 0, 0, 0) 4px);
+    -webkit-mask: repeating-linear-gradient(90deg,
+            rgba(0, 0, 0, 1) 0px,
+            rgba(0, 0, 0, 1) 3px,
+            rgba(0, 0, 0, 0) 3px,
+            rgba(0, 0, 0, 0) 4px);
 }
 
 /* Peak hold indicator */
