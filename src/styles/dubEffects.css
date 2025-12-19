@@ -618,20 +618,20 @@
     margin: 0 10px;
 }
 
-/* Pitch shift section with purple accent */
+/* Pitch shift section - same orange styling as Varispeed */
 .pitch-shift-section .fader-label {
-    color: #a855f7;
+    color: #ff9500;
 }
 
-/* Purple glow for pitch shift fader */
+/* Orange glow for pitch shift fader (same as varispeed) */
 .fader-glow-horizontal.pitch-glow {
-    background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%);
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    background: linear-gradient(90deg, #cc7700 0%, #ff9500 100%);
+    box-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
 }
 
-/* Purple accent for pitch shift value display */
+/* Green accent for pitch shift value display (matches varispeed) */
 .pitch-shift-section .fader-value {
-    color: #a855f7;
+    color: #39ff14;
 }
 
 /* Disabled pitch shift section */
