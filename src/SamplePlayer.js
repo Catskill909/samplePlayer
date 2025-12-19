@@ -1,6 +1,9 @@
 // ES Module imports
 import DubEffects from './DubEffects.js';
 
+// Tone.js pitch shift is disabled temporarily - feature in development
+// let Tone = null;
+
 class SamplePlayer {
     constructor() {
         this.audioContext = null;
@@ -47,6 +50,10 @@ class SamplePlayer {
 
         // Master volume state
         this.masterVolume = 1.0;
+
+        // Pitch shift state (Tone.js phase vocoder)
+        this.pitchShift = null;
+        this.pitchShiftAmount = 0; // Semitones (-12 to +12)
 
         this.elements = {
             audioInput: document.getElementById('audioInput'),
@@ -141,9 +148,41 @@ class SamplePlayer {
     async initializeAudioContext() {
         if (!this.audioContext || this.audioContext.state === 'closed') {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Register the SoundTouchJS AudioWorklet processor
+            try {
+                await this.audioContext.audioWorklet.addModule('/soundtouch-worklet.js');
+
+                // Create the AudioWorkletNode for pitch shifting
+                this.pitchWorklet = new AudioWorkletNode(this.audioContext, 'soundtouch-processor');
+
+                // Store reference to the pitchSemitones parameter for real-time control
+                this.pitchSemitonesParam = this.pitchWorklet.parameters.get('pitchSemitones');
+
+                console.log('SoundTouch AudioWorklet initialized successfully');
+            } catch (e) {
+                console.warn('Failed to initialize SoundTouch AudioWorklet:', e);
+                this.pitchWorklet = null;
+                this.pitchSemitonesParam = null;
+            }
+
             this.dubEffects = new DubEffects(this.audioContext);
         } else if (this.audioContext.state === 'suspended') {
             await this.audioContext.resume();
+        }
+    }
+
+    /**
+     * Set the pitch shift amount in semitones
+     * @param {number} semitones - Pitch shift amount (-12 to +12)
+     */
+    setPitchShift(semitones) {
+        // Always store the value so it's applied when playback starts
+        this.pitchShiftAmount = semitones;
+
+        // Apply to AudioWorklet if available (real-time parameter update)
+        if (this.pitchSemitonesParam) {
+            this.pitchSemitonesParam.value = semitones;
         }
     }
 
@@ -878,7 +917,21 @@ class SamplePlayer {
         // Create channel splitter for stereo metering
         this.splitterNode = this.audioContext.createChannelSplitter(2);
 
-        this.sourceNode.connect(this.gainNode);
+        // Always route through SoundTouch AudioWorklet for real-time pitch control
+        // When pitchSemitones = 0, output is unchanged but we can adjust in real-time
+        if (this.pitchWorklet) {
+            // Apply current pitch shift amount (default 0 = no change)
+            if (this.pitchSemitonesParam) {
+                this.pitchSemitonesParam.value = this.pitchShiftAmount || 0;
+            }
+
+            // Connect: source -> pitchWorklet -> gainNode
+            this.sourceNode.connect(this.pitchWorklet);
+            this.pitchWorklet.connect(this.gainNode);
+        } else {
+            // Fallback: Direct connection if worklet failed to load
+            this.sourceNode.connect(this.gainNode);
+        }
 
         // Connect for VU metering
         this.gainNode.connect(this.splitterNode);

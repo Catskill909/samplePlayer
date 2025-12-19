@@ -22,6 +22,8 @@
     "wavesurfer.js": "^7.12.1"
   },
   "dependencies": {
-    "serve": "^14.2.5"
+    "@soundtouchjs/audio-worklet": "^0.2.1",
+    "serve": "^14.2.5",
+    "tone": "^15.1.22"
   }
 }

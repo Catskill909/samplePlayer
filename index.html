@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>OSS Sample Trigger Player</title>
+  <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet" />
@@ -271,27 +272,39 @@
       </div>
 
       <h3>Effects and Controls</h3>
-      <p>Each effect pad in the Dub Effects panel can add unique audio effects to your sample playback. To use an
-        effect:</p>
+      <p>Each effect pad in the Dub Effects panel can add unique audio effects to your sample playback. Effects use
+        <strong>toggle mode</strong>:
+      </p>
       <ul>
-        <li>Click or press down on a pad to activate the effect</li>
-        <li>Release the pad to deactivate the effect</li>
-        <li>Each effect has visual feedback to indicate activation</li>
+        <li><strong>Click once</strong> to turn an effect ON (pad lights up)</li>
+        <li><strong>Click again</strong> to turn the effect OFF</li>
+        <li>Multiple effects can be active simultaneously</li>
+        <li>Use keyboard shortcuts <kbd>Q W E R A S D F</kbd> to toggle effects</li>
       </ul>
 
       <h3>Pitch / Speed Control</h3>
-      <p>Use the PITCH tab in the effects bank to control playback speed:</p>
+      <p>The PITCH tab offers two independent controls:</p>
+
+      <h4>Varispeed (Orange)</h4>
       <ul>
-        <li><strong>Speed Fader</strong>: Drag left for slower (0.5×) or right for faster (2.0×)</li>
-        <li>Fader is centered at <strong>1.0× (normal speed)</strong></li>
-        <li>Speed changes affect both pitch and tempo together (like vinyl)</li>
-        <li>Adjust speed in real-time while audio is playing</li>
-        <li>Click <strong>Reset</strong> to return to normal speed instantly</li>
-        <li>Trigger points work correctly at any speed setting</li>
+        <li>Drag left for slower (0.5×) or right for faster (2.0×)</li>
+        <li>Changes both <strong>pitch AND tempo</strong> together (like vinyl/tape)</li>
+        <li>Centered at 1.0× (normal speed)</li>
+        <li>Great for classic dub slowdown effects</li>
       </ul>
+
+      <h4>Pitch Shift (Purple)</h4>
+      <ul>
+        <li>Adjust pitch from <strong>-12 to +12 semitones</strong> (one octave each way)</li>
+        <li>Pitch changes in <strong>real-time</strong> while audio plays</li>
+        <li><strong>Tempo stays the same</strong> - only pitch changes</li>
+        <li>Uses SoundTouch WSOLA algorithm for high-quality shifting</li>
+        <li>Perfect for creative pitch effects without speed changes</li>
+      </ul>
+
       <div class="note">
-        <strong>Tip:</strong> Slowing down samples can reveal hidden details and create deeper, heavier sounds - a
-        classic dub technique!
+        <strong>Tip:</strong> Combine both controls! Use Varispeed for classic dub slowdowns,
+        and Pitch Shift for modern pitch effects while keeping the groove.
       </div>
 
       <h3>Master Volume</h3>
@@ -474,10 +487,10 @@
 
     <!-- PITCH Panel -->
     <div class="effects-panel" id="panel-pitch">
-      <div class="pitch-control-panel-simple">
-        <!-- Speed Fader Section -->
-        <div class="pitch-fader-section-centered">
-          <div class="fader-label">SPEED</div>
+      <div class="pitch-control-panel-dual">
+        <!-- Speed Fader Section (Varispeed) -->
+        <div class="pitch-fader-section">
+          <div class="fader-label">VARISPEED</div>
           <div class="fader-container-horizontal">
             <span class="fader-min">0.5×</span>
             <div class="fader-track-horizontal">
@@ -491,8 +504,33 @@
             <i class="fas fa-undo"></i> Reset
           </button>
           <div class="pitch-info-inline">
-            <i class="fas fa-info-circle"></i>
-            Speed affects playback rate and pitch together
+            <i class="fas fa-compact-disc"></i>
+            Changes pitch + speed (turntable style)
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="pitch-divider"></div>
+
+        <!-- Pitch Shift Section (SoundTouch AudioWorklet) -->
+        <div class="pitch-fader-section pitch-shift-section">
+          <div class="fader-label">PITCH SHIFT</div>
+          <div class="fader-container-horizontal">
+            <span class="fader-min">-12</span>
+            <div class="fader-track-horizontal">
+              <input type="range" id="pitchShiftFader" class="speed-fader-horizontal pitch-shift-fader" min="-12"
+                max="12" step="1" value="0">
+              <div class="fader-glow-horizontal pitch-glow" id="pitchShiftGlow"></div>
+            </div>
+            <span class="fader-max">+12</span>
+            <div class="fader-value" id="pitchShiftValue">0 st</div>
+          </div>
+          <button class="pitch-reset-btn-inline" id="pitchShiftResetBtn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+          <div class="pitch-info-inline">
+            <i class="fas fa-wave-square"></i>
+            Pitch only - preserves original tempo
           </div>
         </div>
       </div>

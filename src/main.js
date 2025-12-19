@@ -195,6 +195,43 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVolumeDisplay(1.0);
 
     // ==========================================
+    // PITCH SHIFT CONTROL (Phase Vocoder)
+    // ==========================================
+    const pitchShiftFader = document.getElementById('pitchShiftFader');
+    const pitchShiftValue = document.getElementById('pitchShiftValue');
+    const pitchShiftGlow = document.getElementById('pitchShiftGlow');
+    const pitchShiftResetBtn = document.getElementById('pitchShiftResetBtn');
+
+    function updatePitchShiftDisplay(semitones) {
+        // Update display text
+        const sign = semitones > 0 ? '+' : '';
+        pitchShiftValue.textContent = `${sign}${semitones} st`;
+
+        // Update glow position (map -12 to +12 → 0% to 100%)
+        const percent = ((semitones + 12) / 24) * 100;
+        pitchShiftGlow.style.width = `calc(${percent}% - 8px)`;
+
+        // Apply to player
+        window.player.setPitchShift(semitones);
+    }
+
+    function updatePitchShift(semitones) {
+        pitchShiftFader.value = semitones;
+        updatePitchShiftDisplay(semitones);
+    }
+
+    pitchShiftFader?.addEventListener('input', (e) => {
+        updatePitchShiftDisplay(parseInt(e.target.value));
+    });
+
+    pitchShiftResetBtn?.addEventListener('click', () => updatePitchShift(0));
+
+    // Initialize pitch shift display
+    if (pitchShiftGlow) {
+        pitchShiftGlow.style.width = 'calc(50% - 8px)'; // Center position for 0
+    }
+
+    // ==========================================
     // HELP SYSTEM (direct HTML, no iframe)
     // ==========================================
     const helpTrigger = document.getElementById('helpTrigger');
