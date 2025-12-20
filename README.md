@@ -2,6 +2,14 @@
 
 A web-based audio sample player designed for real-time performance and sound manipulation. Load samples, set trigger points, and apply dub-style effects on the fly.
 
+## Screenshots
+
+![Main Interface](public/images/1.png)
+
+![Sample Library](public/images/2.png)
+
+![Effects & Controls](public/images/3.png)
+
 ## Features
 
 ### 🎧 Sample Playback
