@@ -20,13 +20,56 @@ document.addEventListener('DOMContentLoaded', () => {
     window.samples = samples;
 
     // ==========================================
-    // SAMPLE BROWSER
+    // SAMPLE BROWSER & CUSTOM SAMPLES
     // ==========================================
     const browseSamples = document.getElementById('browseSamples');
     const sampleBrowser = document.getElementById('sampleBrowserOverlay');
     const closeBrowser = document.getElementById('closeSampleBrowser');
     const sampleList = document.getElementById('sampleList');
     const tabs = document.querySelectorAll('.tab-button');
+
+    // Save Sample Modal elements
+    const saveSampleModal = document.getElementById('saveSampleModal');
+    const customSampleTitleInput = document.getElementById('customSampleTitle');
+    const cancelSaveSampleBtn = document.getElementById('cancelSaveSample');
+    const confirmSaveSampleBtn = document.getElementById('confirmSaveSample');
+
+    // Audio input element
+    const audioInput = document.getElementById('audioInput');
+
+    // Custom samples storage
+    let customSamples = [];
+    let pendingFileData = null; // Stores { name, dataUrl } for file being saved
+    let currentTab = 'oss';
+
+    // Load custom samples from localStorage
+    function loadCustomSamples() {
+        try {
+            const stored = localStorage.getItem('customSamples');
+            if (stored) {
+                customSamples = JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Error loading custom samples:', e);
+            customSamples = [];
+        }
+    }
+
+    // Save custom samples to localStorage
+    function saveCustomSamples() {
+        try {
+            localStorage.setItem('customSamples', JSON.stringify(customSamples));
+        } catch (e) {
+            console.error('Error saving custom samples:', e);
+            // Handle quota exceeded
+            if (e.name === 'QuotaExceededError') {
+                alert('Storage quota exceeded. Try removing some custom samples.');
+            }
+        }
+    }
+
+    // Initialize custom samples from storage
+    loadCustomSamples();
 
     browseSamples?.addEventListener('click', () => {
         sampleBrowser.classList.add('active');
@@ -43,8 +86,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateSampleList(category) {
-        const currentSamples = samples[category];
+        currentTab = category;
         sampleList.innerHTML = '';
+
+        // Handle custom samples differently
+        if (category === 'custom') {
+            if (customSamples.length === 0) {
+                // Show empty state
+                sampleList.innerHTML = `
+                    <div class="sample-list-empty">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No custom samples yet.<br>Load a local file to add samples here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            customSamples.forEach((sample, index) => {
+                const item = document.createElement('div');
+                item.className = 'sample-item custom-sample';
+                item.innerHTML = `
+                    <i class="fas fa-music"></i>
+                    <span>${sample.name}</span>
+                    <button class="delete-sample-btn" data-index="${index}" title="Delete sample">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                // Add click handler for playing (exclude delete button clicks)
+                item.addEventListener('click', (e) => {
+                    if (!e.target.closest('.delete-sample-btn')) {
+                        player.loadSampleFromDataUrl(sample.url, sample.name);
+                        sampleBrowser.classList.remove('active');
+                    }
+                });
+
+                // Add delete handler
+                const deleteBtn = item.querySelector('.delete-sample-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteCustomSample(index);
+                });
+
+                sampleList.appendChild(item);
+            });
+            return;
+        }
+
+        // Handle built-in samples
+        const currentSamples = samples[category];
+        if (!currentSamples) return;
 
         currentSamples.forEach(sample => {
             const item = document.createElement('div');
@@ -60,6 +151,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function deleteCustomSample(index) {
+        if (index >= 0 && index < customSamples.length) {
+            customSamples.splice(index, 1);
+            saveCustomSamples();
+            // Clear any pending file data to prevent state issues
+            pendingFileData = null;
+            if (currentTab === 'custom') {
+                updateSampleList('custom');
+            }
+        }
+    }
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             tabs.forEach(t => t.classList.remove('active'));
@@ -72,6 +175,112 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tabs.length > 0) {
         updateSampleList('oss');
     }
+
+    // ==========================================
+    // SAVE SAMPLE MODAL LOGIC
+    // ==========================================
+
+    // Intercept file input to show save modal
+    audioInput?.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Read file as data URL
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const dataUrl = event.target.result;
+
+            // Extract filename without extension for default title
+            const defaultName = file.name.replace(/\.[^/.]+$/, '');
+
+            // Store pending file data
+            pendingFileData = {
+                name: defaultName,
+                dataUrl: dataUrl,
+                file: file
+            };
+
+            // Show save modal
+            customSampleTitleInput.value = defaultName;
+            saveSampleModal.classList.add('active');
+            customSampleTitleInput.focus();
+            customSampleTitleInput.select();
+        };
+
+        reader.onerror = () => {
+            console.error('Error reading file');
+            alert('Error reading file. Please try again.');
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    // Handle Enter key in title input
+    customSampleTitleInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            confirmSaveSampleBtn?.click();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelSaveSampleBtn?.click();
+        }
+    });
+
+    // Cancel button - just load the sample without saving
+    cancelSaveSampleBtn?.addEventListener('click', () => {
+        saveSampleModal.classList.remove('active');
+
+        if (pendingFileData) {
+            // Load the sample directly without saving to library
+            player.loadSampleFromFile(pendingFileData.file, pendingFileData.name);
+            pendingFileData = null;
+        }
+
+        // Clear file input
+        if (audioInput) audioInput.value = '';
+    });
+
+    // Save button - save to custom library and load
+    confirmSaveSampleBtn?.addEventListener('click', () => {
+        if (!pendingFileData) {
+            saveSampleModal.classList.remove('active');
+            return;
+        }
+
+        // Get the title (use default if empty)
+        let title = customSampleTitleInput.value.trim();
+        if (!title) {
+            title = pendingFileData.name;
+        }
+
+        // Add to custom samples
+        customSamples.push({
+            name: title,
+            url: pendingFileData.dataUrl
+        });
+
+        // Save to localStorage
+        saveCustomSamples();
+
+        // Close modal
+        saveSampleModal.classList.remove('active');
+
+        // Load the sample
+        player.loadSampleFromFile(pendingFileData.file, title);
+
+        pendingFileData = null;
+
+        // Clear file input
+        if (audioInput) audioInput.value = '';
+    });
+
+    // Close modal when clicking outside
+    saveSampleModal?.addEventListener('click', (e) => {
+        if (e.target === saveSampleModal) {
+            // Treat as cancel
+            cancelSaveSampleBtn?.click();
+        }
+    });
 
     // ==========================================
     // EFFECTS BANK TAB SWITCHING

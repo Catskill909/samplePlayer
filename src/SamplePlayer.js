@@ -239,41 +239,7 @@ class SamplePlayer {
         // Loop Selection button
         this.elements.loopSelectionBtn?.addEventListener('click', () => this.toggleLoopSelection());
 
-        this.elements.audioInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            if (this.isPlaying) {
-                this.stopPlayback();
-            }
-
-            try {
-                await this.initializeAudioContext();
-
-                if (this.sourceNode) {
-                    this.sourceNode.disconnect();
-                    this.sourceNode = null;
-                }
-
-                this.audioBuffer = null;
-
-                const arrayBuffer = await file.arrayBuffer();
-                this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-
-                this.ctx.clearRect(0, 0, this.elements.spectrogram.width, this.elements.spectrogram.height);
-                this.drawWaveform();
-
-                this.elements.playButton.disabled = false;
-                this.elements.markButton.disabled = false;
-                this.resetTriggers();
-
-                e.target.value = '';
-            } catch (error) {
-                console.error('Error loading audio file:', error);
-                alert('Error loading audio file. Please try another file.');
-                e.target.value = '';
-            }
-        });
+        // Note: audioInput file handling is now done in main.js with the save modal
 
         this.elements.playButton.addEventListener('click', () => {
             if (this.isPlaying) {
@@ -297,6 +263,11 @@ class SamplePlayer {
         document.addEventListener('keydown', (e) => {
             if (e.repeat) return;
 
+            // Don't process shortcuts when typing in input fields or textareas
+            const activeElement = document.activeElement;
+            if (activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA') {
+                return;
+            }
             // Start trigger (0 key)
             if (e.key === '0') {
                 if (this.audioBuffer) {
@@ -1085,6 +1056,142 @@ class SamplePlayer {
             this.saveTriggerPoints();
         }
     }
+
+    // Load sample from a File object with a custom name
+    async loadSampleFromFile(file, sampleName) {
+        if (this.isPlaying) {
+            this.stopPlayback();
+        }
+
+        // Clear any existing selection
+        this.clearSelection();
+
+        this.audioBuffer = null;
+        if (this.sourceNode) {
+            this.sourceNode.disconnect();
+            this.sourceNode = null;
+        }
+
+        if (this.elements.audioInput) {
+            this.elements.audioInput.value = '';
+        }
+
+        // Store the sample name for use during playback
+        this.currentSampleName = sampleName;
+
+        // Update the title with animation (without duration initially)
+        this.elements.sampleTitle.textContent = sampleName;
+        this.elements.sampleTitle.classList.remove('active');
+        void this.elements.sampleTitle.offsetWidth;
+        this.elements.sampleTitle.classList.add('active');
+
+        try {
+            await this.initializeAudioContext();
+
+            const arrayBuffer = await file.arrayBuffer();
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+
+            this.ctx.clearRect(0, 0, this.elements.spectrogram.width, this.elements.spectrogram.height);
+            this.drawWaveform();
+
+            this.elements.playButton.disabled = false;
+            this.elements.markButton.disabled = false;
+
+            // Update title with duration
+            const durationMins = Math.floor(this.audioBuffer.duration / 60);
+            const durationSecs = Math.floor(this.audioBuffer.duration % 60);
+            const durationText = `${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+            this.elements.sampleTitle.textContent = `${sampleName} • ${durationText}`;
+
+            // Use a unique identifier for storing trigger points (based on file name + size)
+            const uniqueId = `custom_${file.name}_${file.size}`;
+            this.currentSampleUrl = uniqueId;
+
+            // Check if we have saved trigger points
+            const savedData = localStorage.getItem(`triggerPoints_${uniqueId}`);
+            if (savedData) {
+                this.loadSavedTriggerPoints();
+            } else {
+                this.resetTriggers();
+            }
+        } catch (error) {
+            this.elements.sampleTitle.textContent = '';
+            this.elements.sampleTitle.classList.remove('active');
+            console.error('Error loading audio file:', error);
+            alert('Error loading audio file. Please try another file.');
+            this.currentSampleUrl = null;
+        }
+    }
+
+    // Load sample from a data URL (base64) with a custom name
+    // Used for loading custom samples from localStorage
+    async loadSampleFromDataUrl(dataUrl, sampleName) {
+        if (this.isPlaying) {
+            this.stopPlayback();
+        }
+
+        // Clear any existing selection
+        this.clearSelection();
+
+        this.audioBuffer = null;
+        if (this.sourceNode) {
+            this.sourceNode.disconnect();
+            this.sourceNode = null;
+        }
+
+        if (this.elements.audioInput) {
+            this.elements.audioInput.value = '';
+        }
+
+        // Store the sample name for use during playback
+        this.currentSampleName = sampleName;
+
+        // Update the title with animation (without duration initially)
+        this.elements.sampleTitle.textContent = sampleName;
+        this.elements.sampleTitle.classList.remove('active');
+        void this.elements.sampleTitle.offsetWidth;
+        this.elements.sampleTitle.classList.add('active');
+
+        try {
+            await this.initializeAudioContext();
+
+            // Fetch the data URL and decode
+            const response = await fetch(dataUrl);
+            const arrayBuffer = await response.arrayBuffer();
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+
+            this.ctx.clearRect(0, 0, this.elements.spectrogram.width, this.elements.spectrogram.height);
+            this.drawWaveform();
+
+            this.elements.playButton.disabled = false;
+            this.elements.markButton.disabled = false;
+
+            // Update title with duration
+            const durationMins = Math.floor(this.audioBuffer.duration / 60);
+            const durationSecs = Math.floor(this.audioBuffer.duration % 60);
+            const durationText = `${durationMins}:${durationSecs.toString().padStart(2, '0')}`;
+            this.elements.sampleTitle.textContent = `${sampleName} • ${durationText}`;
+
+            // Use sample name as unique identifier for trigger points
+            const uniqueId = `custom_${sampleName}`;
+            this.currentSampleUrl = uniqueId;
+
+            // Check if we have saved trigger points
+            const savedData = localStorage.getItem(`triggerPoints_${uniqueId}`);
+            if (savedData) {
+                this.loadSavedTriggerPoints();
+            } else {
+                this.resetTriggers();
+            }
+        } catch (error) {
+            this.elements.sampleTitle.textContent = '';
+            this.elements.sampleTitle.classList.remove('active');
+            console.error('Error loading sample from data URL:', error);
+            alert('Error loading sample. Please try again.');
+            this.currentSampleUrl = null;
+        }
+    }
+
 
     async loadSampleFromUrl(url) {
         if (this.isPlaying) {

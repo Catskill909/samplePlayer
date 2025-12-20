@@ -6,6 +6,7 @@ A web-based audio sample player designed for real-time performance and sound man
 
 ### 🎧 Sample Playback
 - **Load Samples**: Import local audio files or browse the built-in library of OSS sounds, Reggae skits, and Sirens.
+- **Custom Sample Library**: Save your local samples with custom titles to your personal library for quick access.
 - **Visual Waveform**: Interactive waveform display with a playhead and trigger markers.
 - **Enhanced Progress Visualization**: Dark overlay on played portion of waveform for clear visual feedback.
 - **Live Playback Overlay**: Top-right corner display showing sample name, current position, and total duration in real-time.
@@ -41,6 +42,12 @@ A web-based audio sample player designed for real-time performance and sound man
 - **Real-time Adjustment**: Change volume while playing without clicks or pops.
 - **Green LED Glow**: Visual feedback shows current volume level.
 - **Reset Button**: Instantly return to full volume.
+
+### 📁 Custom Sample Library
+- **Save Local Samples**: When loading a local file, enter a custom title to save it to your library.
+- **Custom Tab**: Access your saved samples from the "Custom" tab in Browse Samples.
+- **Persistent Storage**: Custom samples are saved in your browser and persist across sessions.
+- **Easy Management**: Delete samples from your library with one click.
 
 ## Getting Started
 
