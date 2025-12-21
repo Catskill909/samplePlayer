@@ -24,6 +24,7 @@
   "dependencies": {
     "@soundtouchjs/audio-worklet": "^0.2.1",
     "serve": "^14.2.5",
-    "tone": "^15.1.22"
+    "tone": "^15.1.22",
+    "tunajs": "^1.0.15"
   }
 }

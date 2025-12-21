@@ -441,6 +441,224 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
+    // FILTER SWEEPS CONTROL SYSTEM
+    // ==========================================
+    const lowpassFader = document.getElementById('lowpassFader');
+    const lowpassValue = document.getElementById('lowpassValue');
+    const lowpassGlow = document.getElementById('lowpassGlow');
+    const lowpassResFader = document.getElementById('lowpassResFader');
+    const lowpassResValue = document.getElementById('lowpassResValue');
+
+    const highpassFader = document.getElementById('highpassFader');
+    const highpassValue = document.getElementById('highpassValue');
+    const highpassGlow = document.getElementById('highpassGlow');
+    const highpassResFader = document.getElementById('highpassResFader');
+    const highpassResValue = document.getElementById('highpassResValue');
+
+    const lowpassResetBtn = document.getElementById('lowpassResetBtn');
+    const highpassResetBtn = document.getElementById('highpassResetBtn');
+
+    // Logarithmic frequency mapping for natural filter feel
+    function sliderToLowpassFreq(sliderVal) {
+        // Map 0-100 to 100Hz-20000Hz logarithmically
+        const minFreq = 100;
+        const maxFreq = 20000;
+        return minFreq * Math.pow(maxFreq / minFreq, sliderVal / 100);
+    }
+
+    function sliderToHighpassFreq(sliderVal) {
+        // Map 0-100 to 20Hz-8000Hz logarithmically
+        const minFreq = 20;
+        const maxFreq = 8000;
+        return minFreq * Math.pow(maxFreq / minFreq, sliderVal / 100);
+    }
+
+    // Resonance mapping - exponential for more control at lower values
+    function sliderToResonance(sliderVal) {
+        // Map 0-100 to Q of 0.5-20
+        return 0.5 + (sliderVal / 100) * 19.5;
+    }
+
+    function formatFrequency(freq) {
+        if (freq >= 1000) {
+            return (freq / 1000).toFixed(1) + 'k';
+        }
+        return Math.round(freq) + ' Hz';
+    }
+
+    // Lowpass filter controls
+    function updateLowpassDisplay(sliderVal) {
+        const freq = sliderToLowpassFreq(sliderVal);
+        lowpassValue.textContent = formatFrequency(freq);
+        lowpassGlow.style.width = `calc(${sliderVal}% - 8px)`;
+
+        if (window.player?.filterSweeps) {
+            window.player.filterSweeps.setLowpassFrequency(freq);
+        }
+    }
+
+    function updateLowpassResonance(sliderVal) {
+        const q = sliderToResonance(sliderVal);
+        lowpassResValue.textContent = q.toFixed(1);
+
+        if (window.player?.filterSweeps) {
+            window.player.filterSweeps.setLowpassResonance(q);
+        }
+    }
+
+    lowpassFader?.addEventListener('input', (e) => {
+        updateLowpassDisplay(parseFloat(e.target.value));
+    });
+
+    lowpassResFader?.addEventListener('input', (e) => {
+        updateLowpassResonance(parseFloat(e.target.value));
+    });
+
+    // Highpass filter controls
+    function updateHighpassDisplay(sliderVal) {
+        const freq = sliderToHighpassFreq(sliderVal);
+        highpassValue.textContent = formatFrequency(freq);
+        highpassGlow.style.width = `calc(${sliderVal}% - 8px)`;
+
+        if (window.player?.filterSweeps) {
+            window.player.filterSweeps.setHighpassFrequency(freq);
+        }
+    }
+
+    function updateHighpassResonance(sliderVal) {
+        const q = sliderToResonance(sliderVal);
+        highpassResValue.textContent = q.toFixed(1);
+
+        if (window.player?.filterSweeps) {
+            window.player.filterSweeps.setHighpassResonance(q);
+        }
+    }
+
+    highpassFader?.addEventListener('input', (e) => {
+        updateHighpassDisplay(parseFloat(e.target.value));
+    });
+
+    highpassResFader?.addEventListener('input', (e) => {
+        updateHighpassResonance(parseFloat(e.target.value));
+    });
+
+    // Lowpass reset button
+    lowpassResetBtn?.addEventListener('click', () => {
+        if (lowpassFader) {
+            lowpassFader.value = 100;
+            updateLowpassDisplay(100);
+        }
+        if (lowpassResFader) {
+            lowpassResFader.value = 10;
+            updateLowpassResonance(10);
+        }
+    });
+
+    // Highpass reset button
+    highpassResetBtn?.addEventListener('click', () => {
+        if (highpassFader) {
+            highpassFader.value = 0;
+            updateHighpassDisplay(0);
+        }
+        if (highpassResFader) {
+            highpassResFader.value = 10;
+            updateHighpassResonance(10);
+        }
+    });
+
+    // ==========================================
+    // MOD PANEL CONTROLS (Flanger & Phaser)
+    // ==========================================
+    const flangerToggle = document.getElementById('flangerToggle');
+    const flangerRate = document.getElementById('flangerRate');
+    const flangerRateValue = document.getElementById('flangerRateValue');
+    const flangerDepth = document.getElementById('flangerDepth');
+    const flangerDepthValue = document.getElementById('flangerDepthValue');
+    const flangerFeedback = document.getElementById('flangerFeedback');
+    const flangerFeedbackValue = document.getElementById('flangerFeedbackValue');
+
+    const phaserToggle = document.getElementById('phaserToggle');
+    const phaserRate = document.getElementById('phaserRate');
+    const phaserRateValue = document.getElementById('phaserRateValue');
+    const phaserDepth = document.getElementById('phaserDepth');
+    const phaserDepthValue = document.getElementById('phaserDepthValue');
+    const phaserFeedback = document.getElementById('phaserFeedback');
+    const phaserFeedbackValue = document.getElementById('phaserFeedbackValue');
+
+    // Rate mapping: 0-100 -> 0.05-5 Hz (logarithmic)
+    function sliderToRate(val, maxRate = 5) {
+        return 0.05 * Math.pow(maxRate / 0.05, val / 100);
+    }
+
+    // Flanger toggle
+    flangerToggle?.addEventListener('click', () => {
+        const isActive = !flangerToggle.classList.contains('active');
+        flangerToggle.classList.toggle('active', isActive);
+        flangerToggle.innerHTML = isActive
+            ? '<i class="fas fa-power-off"></i> ON'
+            : '<i class="fas fa-power-off"></i> OFF';
+        window.player?.filterSweeps?.toggleFlanger(isActive);
+    });
+
+    // Flanger Rate
+    flangerRate?.addEventListener('input', (e) => {
+        const rate = sliderToRate(parseFloat(e.target.value), 5);
+        flangerRateValue.textContent = rate.toFixed(2) + ' Hz';
+        window.player?.filterSweeps?.setFlangerRate(rate);
+    });
+
+    // Flanger Depth
+    flangerDepth?.addEventListener('input', (e) => {
+        const depth = parseFloat(e.target.value) / 100;
+        flangerDepthValue.textContent = Math.round(depth * 100) + '%';
+        window.player?.filterSweeps?.setFlangerDepth(depth);
+    });
+
+    // Flanger Feedback
+    flangerFeedback?.addEventListener('input', (e) => {
+        const feedback = parseFloat(e.target.value) / 100 * 0.95;
+        flangerFeedbackValue.textContent = Math.round(parseFloat(e.target.value)) + '%';
+        window.player?.filterSweeps?.setFlangerFeedback(feedback);
+    });
+
+    // Phaser toggle
+    phaserToggle?.addEventListener('click', () => {
+        const isActive = !phaserToggle.classList.contains('active');
+        phaserToggle.classList.toggle('active', isActive);
+        phaserToggle.innerHTML = isActive
+            ? '<i class="fas fa-power-off"></i> ON'
+            : '<i class="fas fa-power-off"></i> OFF';
+        window.player?.filterSweeps?.togglePhaser(isActive);
+    });
+
+    // Phaser Rate
+    phaserRate?.addEventListener('input', (e) => {
+        const rate = sliderToRate(parseFloat(e.target.value), 8);
+        phaserRateValue.textContent = rate.toFixed(2) + ' Hz';
+        window.player?.filterSweeps?.setPhaserRate(rate);
+    });
+
+    // Phaser Depth
+    phaserDepth?.addEventListener('input', (e) => {
+        const depth = parseFloat(e.target.value) / 100;
+        phaserDepthValue.textContent = Math.round(depth * 100) + '%';
+        window.player?.filterSweeps?.setPhaserDepth(depth);
+    });
+
+    // Phaser Feedback
+    phaserFeedback?.addEventListener('input', (e) => {
+        const feedback = parseFloat(e.target.value) / 100 * 0.95;
+        phaserFeedbackValue.textContent = Math.round(parseFloat(e.target.value)) + '%';
+        window.player?.filterSweeps?.setPhaserFeedback(feedback);
+    });
+
+    // Initialize filter displays
+    if (lowpassFader) updateLowpassDisplay(100);
+    if (lowpassResFader) updateLowpassResonance(10);
+    if (highpassFader) updateHighpassDisplay(0);
+    if (highpassResFader) updateHighpassResonance(10);
+
+    // ==========================================
     // HELP SYSTEM (direct HTML, no iframe)
     // ==========================================
     const helpTrigger = document.getElementById('helpTrigger');

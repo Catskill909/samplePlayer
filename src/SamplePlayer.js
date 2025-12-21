@@ -1,5 +1,6 @@
 // ES Module imports
 import DubEffects from './DubEffects.js';
+import FilterSweeps from './FilterSweeps.js';
 
 // Tone.js pitch shift is disabled temporarily - feature in development
 // let Tone = null;
@@ -24,8 +25,10 @@ class SamplePlayer {
         this.currentSampleUrl = null;
         this.currentSampleName = null; // Track sample display name
         this.dubEffects = null;
+        this.filterSweeps = null; // FilterSweeps effects module
         this.draggingIndex = null; // Track which trigger is being dragged
         this.effectToggles = {}; // Track toggle state for each effect
+        this.filterToggles = {}; // Track toggle state for filter modulation effects
 
         // VU meter state
         this.peakL = 0;
@@ -167,6 +170,7 @@ class SamplePlayer {
             }
 
             this.dubEffects = new DubEffects(this.audioContext);
+            this.filterSweeps = new FilterSweeps(this.audioContext);
         } else if (this.audioContext.state === 'suspended') {
             await this.audioContext.resume();
         }
@@ -915,7 +919,14 @@ class SamplePlayer {
         if (this.dubEffects) {
             this.dubEffects.connectSource(this.gainNode);
         }
-        this.gainNode.connect(this.audioContext.destination);
+
+        // Route through filter sweeps if available
+        if (this.filterSweeps) {
+            this.gainNode.connect(this.filterSweeps.getInput());
+            this.filterSweeps.connect(this.audioContext.destination);
+        } else {
+            this.gainNode.connect(this.audioContext.destination);
+        }
 
         const initialPosition = Math.floor((offset / this.audioBuffer.duration) * this.elements.waveform.offsetWidth);
         this.elements.playhead.style.left = `${initialPosition}px`;

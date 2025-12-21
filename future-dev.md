@@ -24,6 +24,7 @@ This document outlines potential features, improvements, and technical debt to a
 - [x] **VU Meters**: LED bar stereo meters with peak hold
 - [x] **npm/Vite Conversion**: Modern build system, ES modules, hot reload
 - [x] **Coolify/Nixpacks Deploy**: Auto-deploy from git push
+- [x] **Filter Sweeps Tab**: Lowpass/Highpass filters with resonance, plus Flanger, Phaser, Chorus, Tremolo (Tuna.js)
 
 ---
 
@@ -42,7 +43,6 @@ This document outlines potential features, improvements, and technical debt to a
 
 ### Effects
 - [ ] **Effect Intensity Knobs**: Adjustable wet/dry, feedback, delay time per effect
-- [ ] **Filter Sweep**: Lowpass/Highpass filter with knob or keyboard control
 - [ ] **Vinyl Stop/Start**: Pitch down/up effect for DJ-style stops
 - [ ] **Stutter/Gate**: Rhythmic chopping effect
 

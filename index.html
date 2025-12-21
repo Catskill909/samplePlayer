@@ -328,6 +328,26 @@
         <li>Volume changes are smooth with no clicks or pops</li>
       </ul>
 
+      <h3>Filter Sweeps</h3>
+      <p>The FILTER tab provides real-time filter control and modulation effects:</p>
+
+      <h4>Lowpass / Highpass Filters</h4>
+      <ul>
+        <li><strong>Lowpass</strong>: Drag to sweep from 100Hz to 20kHz - removes high frequencies</li>
+        <li><strong>Highpass</strong>: Drag to sweep from 20Hz to 8kHz - removes low frequencies</li>
+        <li><strong>RES (Resonance)</strong>: Adds emphasis at the cutoff frequency for that classic "squelch"</li>
+        <li>Logarithmic frequency scaling for natural, musical control</li>
+      </ul>
+
+      <h4>Modulation Effects</h4>
+      <ul>
+        <li><kbd>Z</kbd> <strong>Flanger</strong>: Classic jet-plane swoosh effect</li>
+        <li><kbd>X</kbd> <strong>Phaser</strong>: Swirling multi-stage phase modulation</li>
+        <li><kbd>C</kbd> <strong>Chorus</strong>: Thickening shimmer effect</li>
+        <li><kbd>V</kbd> <strong>Tremolo</strong>: Classic amplitude modulation (volume wobble)</li>
+      </ul>
+      <p>Click <strong>Reset All</strong> to return all filters and effects to their default state.</p>
+
       <h3>Available Effects</h3>
       <ul>
         <li><strong>Echo 1, Echo 2, Echo 3</strong>: Three variations of delay effects, each with increasing delay time
@@ -445,8 +465,14 @@
       <button class="effects-tab" data-tab="pitch">
         <i class="fas fa-tachometer-alt"></i> PITCH
       </button>
+      <button class="effects-tab" data-tab="filter">
+        <i class="fas fa-sliders-h"></i> FILTER
+      </button>
+      <button class="effects-tab" data-tab="mod">
+        <i class="fas fa-sync-alt"></i> MOD
+      </button>
       <button class="effects-tab" data-tab="master">
-        <i class="fas fa-sliders-h"></i> MASTER
+        <i class="fas fa-volume-up"></i> MASTER
       </button>
     </div>
 
@@ -542,6 +568,118 @@
           <div class="pitch-info-inline">
             <i class="fas fa-wave-square"></i>
             Pitch only - preserves original tempo
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER Panel -->
+    <div class="effects-panel" id="panel-filter">
+      <div class="pitch-control-panel-dual">
+        <!-- Lowpass Filter Section -->
+        <div class="pitch-fader-section">
+          <div class="fader-label">LOWPASS</div>
+          <div class="fader-container-horizontal">
+            <span class="fader-min">100</span>
+            <div class="fader-track-horizontal">
+              <input type="range" id="lowpassFader" class="speed-fader-horizontal" min="0" max="100" step="1"
+                value="100">
+              <div class="fader-glow-horizontal filter-glow" id="lowpassGlow"></div>
+            </div>
+            <span class="fader-max">20k</span>
+            <div class="fader-value" id="lowpassValue">20.0k</div>
+          </div>
+          <div class="resonance-row">
+            <span class="resonance-label">RES</span>
+            <input type="range" id="lowpassResFader" class="resonance-fader" min="0" max="100" step="1" value="10">
+            <span class="resonance-value" id="lowpassResValue">2.5</span>
+          </div>
+          <button class="pitch-reset-btn-inline" id="lowpassResetBtn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="pitch-divider"></div>
+
+        <!-- Highpass Filter Section -->
+        <div class="pitch-fader-section">
+          <div class="fader-label">HIGHPASS</div>
+          <div class="fader-container-horizontal">
+            <span class="fader-min">20</span>
+            <div class="fader-track-horizontal">
+              <input type="range" id="highpassFader" class="speed-fader-horizontal" min="0" max="100" step="1"
+                value="0">
+              <div class="fader-glow-horizontal filter-glow" id="highpassGlow"></div>
+            </div>
+            <span class="fader-max">8k</span>
+            <div class="fader-value" id="highpassValue">20 Hz</div>
+          </div>
+          <div class="resonance-row">
+            <span class="resonance-label">RES</span>
+            <input type="range" id="highpassResFader" class="resonance-fader" min="0" max="100" step="1" value="10">
+            <span class="resonance-value" id="highpassResValue">2.5</span>
+          </div>
+          <button class="pitch-reset-btn-inline" id="highpassResetBtn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOD Panel -->
+    <div class="effects-panel" id="panel-mod">
+      <div class="pitch-control-panel-dual">
+        <!-- Flanger Section -->
+        <div class="pitch-fader-section mod-section">
+          <div class="fader-label">✈️ FLANGER</div>
+          <div class="mod-toggle-row">
+            <button class="mod-toggle-btn" id="flangerToggle" data-effect="flanger">
+              <i class="fas fa-power-off"></i> OFF
+            </button>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">RATE</span>
+            <input type="range" id="flangerRate" class="mod-fader" min="0" max="100" step="1" value="25">
+            <span class="mod-control-value" id="flangerRateValue">0.5 Hz</span>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">DEPTH</span>
+            <input type="range" id="flangerDepth" class="mod-fader" min="0" max="100" step="1" value="70">
+            <span class="mod-control-value" id="flangerDepthValue">70%</span>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">FDBK</span>
+            <input type="range" id="flangerFeedback" class="mod-fader" min="0" max="100" step="1" value="40">
+            <span class="mod-control-value" id="flangerFeedbackValue">40%</span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="pitch-divider"></div>
+
+        <!-- Phaser Section -->
+        <div class="pitch-fader-section mod-section">
+          <div class="fader-label">🌀 PHASER</div>
+          <div class="mod-toggle-row">
+            <button class="mod-toggle-btn" id="phaserToggle" data-effect="phaser">
+              <i class="fas fa-power-off"></i> OFF
+            </button>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">RATE</span>
+            <input type="range" id="phaserRate" class="mod-fader" min="0" max="100" step="1" value="40">
+            <span class="mod-control-value" id="phaserRateValue">0.8 Hz</span>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">DEPTH</span>
+            <input type="range" id="phaserDepth" class="mod-fader" min="0" max="100" step="1" value="60">
+            <span class="mod-control-value" id="phaserDepthValue">60%</span>
+          </div>
+          <div class="mod-control-row">
+            <span class="mod-control-label">FDBK</span>
+            <input type="range" id="phaserFeedback" class="mod-fader" min="0" max="100" step="1" value="60">
+            <span class="mod-control-value" id="phaserFeedbackValue">60%</span>
           </div>
         </div>
       </div>
